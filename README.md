@@ -26,7 +26,30 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 
 ---
 
-## 🚀 What's New in v1.0 (Enhanced Security Build)
+## � Table of Contents
+
+- [🚀 What's New](#-whats-new-in-v10-enhanced-security-build)
+- [🧠 Technical Concepts](#-technical-concepts-demonstrated)
+- [🏗️ Project Structure](#️-project-structure)
+- [🔧 Setup Instructions](#-setup-instructions)
+- [🎮 How to Use](#-how-to-use)
+- [🔍 Security Pipeline](#-how-it-works-the-security-pipeline)
+- [🧪 Testing](#-testing-the-system)
+- [📊 Performance & Scalability](#-performance--scalability)
+- [🎓 Interview Preparation](#-interview-preparation-key-talking-points)
+- [🛠️ Technologies Used](#️-technologies-used)
+- [🔐 Security Considerations](#-security-considerations)
+- [🚨 Troubleshooting](#-troubleshooting)
+- [📚 Learning Resources](#-learning-resources)
+- [📜 License](#-license)
+- [👤 Author](#-author)
+- [🤝 Contributing](#-contributing)
+- [🌟 Acknowledgments](#-acknowledgments)
+- [📝 Version History](#-version-history)
+
+---
+
+## �🚀 What's New in v1.0 (Enhanced Security Build)
 
 ### 🔐 Major Security Enhancements
 
@@ -657,6 +680,65 @@ AI & Cybersecurity Enthusiast
 📧 [Email](mailto:anugrah.k910@gmail.com)  
 🔗 [GitHub Profile](https://github.com/anugrahk21)  
 💼 [LinkedIn](https://linkedin.com/in/anugrah-k)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Whether you're fixing bugs, improving documentation, or proposing new features, your help is appreciated.
+
+### How to Contribute
+
+1. **Fork the Repository**
+   ```bash
+   git clone https://github.com/yourusername/Project_Cerberus.git
+   cd Project_Cerberus
+   ```
+
+2. **Create a Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make Your Changes**
+   - Follow the existing code style and structure
+   - Add comments to explain complex logic
+   - Update documentation if needed
+
+4. **Test Your Changes**
+   ```bash
+   # Run the server and test with curl commands
+   uvicorn app.main:app --reload
+   ```
+
+5. **Commit and Push**
+   ```bash
+   git add .
+   git commit -m "feat: add your feature description"
+   git push origin feature/your-feature-name
+   ```
+
+6. **Open a Pull Request**
+   - Describe what your changes do
+   - Reference any related issues
+   - Wait for review and feedback
+
+### Contribution Ideas
+
+- 🔒 **Security Enhancements**: Implement new judge algorithms or attack detection patterns
+- ⚡ **Performance**: Optimize judge execution speed or reduce API calls
+- 📊 **Monitoring**: Add metrics collection (Prometheus) or observability features
+- 🧪 **Testing**: Create pytest suite for automated testing
+- 📚 **Documentation**: Improve code comments, add tutorials, or create video demos
+- 🎨 **UI Dashboard**: Build a web interface to visualize attack logs
+- 🐳 **DevOps**: Add Docker support or CI/CD pipelines
+
+### Code of Conduct
+
+- Be respectful and constructive in discussions
+- Test your changes before submitting
+- Keep pull requests focused on a single feature/fix
+- Update documentation to reflect your changes
 
 ---
 
