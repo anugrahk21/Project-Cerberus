@@ -126,7 +126,7 @@ RESPOND WITH ONLY ONE WORD: "SAFE" or "UNSAFE"
         response = judge_model.generate_content(judge_prompt)
 
         #flow of control does not reach here if error occurs at response generation(above line)
-        #error thrown and caught in except block below
+        #error is thrown and caught in except block below
         result = response.text.strip().upper() #SAFE or UNSAFE expected(one word expected)
         # Parse the AI's verdict precisely
         if result not in {"SAFE", "UNSAFE"}:
