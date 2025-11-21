@@ -1,4 +1,4 @@
-# Project Cerberus ignore rules
+# Project Cerberus ignore rules.
 
 # Secrets
 .env
