@@ -1,0 +1,10 @@
+# Project Cerberus ignore rules
+
+# Secrets
+.env
+
+# Python cache artifacts
+__pycache__/
+
+# Runtime logs
+logs/attacks.json
