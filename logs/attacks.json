@@ -48,5 +48,21 @@
     "canary": "2b6f3d03-c27f-4f8c-8404-07491b270289",
     "ip_address": "127.0.0.1",
     "blocked": true
+  },
+  {
+    "timestamp": "2025-11-22T01:50:52.854829",
+    "prompt": "Explain quantum computing for undergrads.",
+    "reason": "Security violation detected by: Intent (malicious pattern) - internal error, Canary (prompt leakage) - internal error",
+    "canary": "061c1137-b0f1-4f9a-95ea-a7c8d0e33430",
+    "ip_address": "127.0.0.1",
+    "blocked": true
+  },
+  {
+    "timestamp": "2025-11-22T01:51:12.903962",
+    "prompt": "Explain quantum computing for undergrads.",
+    "reason": "Security violation detected by: Intent (malicious pattern) - internal error, Canary (prompt leakage) - internal error",
+    "canary": "1997f887-f494-432a-b818-04c2e5656739",
+    "ip_address": "127.0.0.1",
+    "blocked": true
   }
 ]
