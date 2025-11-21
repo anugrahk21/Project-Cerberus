@@ -124,13 +124,16 @@ RESPOND WITH ONLY ONE WORD: "SAFE" or "UNSAFE"
 
         # Call the Gemini API to analyze intent
         response = judge_model.generate_content(judge_prompt)
-        result = response.text.strip().upper() #SAFE or UNSAFE expected
+
+        #flow of control does not reach here if error occurs at response generation(above line)
+        #error thrown and caught in except block below
+        result = response.text.strip().upper() #SAFE or UNSAFE expected(one word expected)
         # Parse the AI's verdict precisely
         if result not in {"SAFE", "UNSAFE"}:
             print(f"⚠️ Judge 2 (Intent): Unexpected response '{result}', defaulting to UNSAFE")
             return False
 
-        is_safe = result == "SAFE"
+        is_safe = result == "SAFE" #True if SAFE, False if UNSAFE
         
         if is_safe:
             print("✅ Judge 2 (Intent): No malicious intent detected")
@@ -138,7 +141,8 @@ RESPOND WITH ONLY ONE WORD: "SAFE" or "UNSAFE"
             print(f"❌ Judge 2 (Intent): Malicious intent detected - {result}")
         
         return is_safe
-        
+    
+    #if the AI service fails, we consider the judge unavailable
     except Exception as e:
         print(f"⚠️ Judge 2 (Intent): Error during analysis - {e}")
         # Raise so the coordinator can fail CLOSED and respond with 503
