@@ -2,7 +2,7 @@
 
 **A Production-Grade Multi-Layered Security System for AI API Protection**
 
-Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cybersecurity principles, Reverse Proxy architecture, and Fail-Closed Security Design.
+Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cybersecurity principles, Reverse Proxy architecture, Fail-Closed Security Design, and Prompt Engineering techniques for AI-powered security.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)
@@ -13,10 +13,10 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 
 ## 📖 Project Overview
 
-**Project Cerberus** is a **secure reverse proxy** that acts as a protective layer between users and AI language models (specifically Google's Gemini 2.5). It implements a **3-judge security council** with **parallel execution**, **context-aware conversations**, and **fail-closed architecture** that screens every request for:
+**Project Cerberus** is a **secure reverse proxy** that acts as a protective layer between users and AI language models (specifically Google's Gemini 2.5). It implements a **3-judge security council** with **parallel execution**, **context-aware conversations**, **prompt engineering**, and **fail-closed architecture** that screens every request for:
 
 - 🔍 **Banned Keywords** (18+ prohibited patterns - literal detection)
-- 🧠 **Malicious Intent** (AI-powered semantic analysis with example-driven prompts)  
+- 🧠 **Malicious Intent** (AI-powered semantic analysis with example-driven prompt engineering)  
 - 🕵️ **Prompt Injection Attempts** (dual canary detection in test + live environments)
 - 🔒 **XML Tag Breakout** (HTML entity escaping for injection prevention)
 - 🛡️ **System Prompt Extraction** (live canary embedding with leakage detection)
@@ -36,16 +36,17 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 6. 🔍 [Security Pipeline](#-how-it-works-the-security-pipeline)
 7. 🧪 [Testing](#-testing-the-system)
 8. 📊 [Performance & Scalability](#-performance--scalability)
-9. 🎓 [Interview Preparation](#-interview-preparation-key-talking-points)
-10. 🛠️ [Technologies Used](#️-technologies-used)
-11. 🔐 [Security Considerations](#-security-considerations)
-12. 🚨 [Troubleshooting](#-troubleshooting)
-13. 📚 [Learning Resources](#-learning-resources)
-14. 📜 [License](#-license)
-15. 👤 [Author](#-author)
-16. 🤝 [Contributing](#-contributing)
-17. 🌟 [Acknowledgments](#-acknowledgments)
-18. 📝 [Version History](#-version-history)
+9. ⚖️ [API vs Custom LLM Approach](#️-api-vs-custom-llm-approach)
+10. 🎓 [Interview Preparation](#-interview-preparation-key-talking-points)
+11. 🛠️ [Technologies Used](#️-technologies-used)
+12. 🔐 [Security Considerations](#-security-considerations)
+13. 🚨 [Troubleshooting](#-troubleshooting)
+14. 📚 [Learning Resources](#-learning-resources)
+15. 📜 [License](#-license)
+16. 👤 [Author](#-author)
+17. 🤝 [Contributing](#-contributing)
+18. 🌟 [Acknowledgments](#-acknowledgments)
+19. 📝 [Version History](#-version-history)
 
 ---
 
@@ -83,10 +84,11 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 - 📝 **Internal Logging Only**: Full attack details saved to `attacks.json`, not exposed to user
 - 🛡️ **Generic Error Messages**: Users see safe, non-informative error messages
 
-#### 7. **Enhanced Judge Prompts**
+#### 7. **Enhanced Judge Prompts (Prompt Engineering)**
 - 📚 **Example-Driven Learning**: Judge 2 now includes SAFE/UNSAFE examples
-- 🎯 **Improved Accuracy**: Reduced false negatives through better prompt engineering
+- 🎯 **Improved Accuracy**: Reduced false negatives through advanced prompt engineering techniques
 - 🔍 **18+ Banned Keywords**: Expanded keyword list including jailbreak patterns
+- 💬 **Zero-Shot Classification**: Instructing Gemini API to act as security classifiers without model fine-tuning
 
 ---
 
@@ -115,6 +117,12 @@ This project showcases advanced Computer Science and Cybersecurity concepts:
 2. 📊 **Observability** - Comprehensive console logging with emoji indicators
 3. ⚙️ **Configuration Management** - Environment variables with fail-fast validation
 4. 🔐 **Secrets Management** - `.gitignore` configuration for API key protection
+
+### AI/ML Engineering
+1. 💬 **Prompt Engineering** - Carefully crafted system prompts with examples to guide LLM behavior
+2. 🎯 **Zero-Shot Classification** - Using pre-trained models for security tasks without fine-tuning
+3. 🧠 **Few-Shot Learning** - Providing SAFE/UNSAFE examples in prompts for better accuracy
+4. 🔄 **Context Management** - Session history replay for multi-turn conversation coherence
 
 ---
 
@@ -456,6 +464,110 @@ If deploying this for real users, consider:
 
 ---
 
+## ⚖️ API vs Custom LLM Approach
+
+### 🎓 Educational Context: Portfolio Project Limitations
+
+**Important Note:** This is a **student portfolio project** demonstrating security concepts using external API services (Google Gemini) with **prompt engineering** (instructing pre-trained models via carefully crafted prompts). In real-world production systems, organizations typically deploy **custom fine-tuned LLMs** (models trained on company-specific data) instead of relying on third-party APIs for security-critical functions.
+
+**Key Distinction:**
+- 💬 **Prompt Engineering (This Project)**: Send detailed instructions/examples per request to guide model behavior temporarily
+- 🧠 **Model Fine-Tuning (Production)**: Permanently train model weights on custom datasets for domain-specific expertise
+
+### Current Implementation (API-Based Approach)
+
+#### ✅ Advantages
+- 🚀 **Fast Development**: No need to train or host models - instant access via API
+- 💰 **Zero Infrastructure Cost**: No GPU servers, model training, or maintenance overhead
+- 🔄 **Always Updated**: Google continuously improves Gemini models
+- 📚 **Pre-trained Intelligence**: Leverages Google's massive training datasets
+- 🛠️ **Easy Prototyping**: Perfect for learning, demos, and portfolio projects
+- ⚡ **No ML Expertise Required**: Just API calls + prompt engineering - accessible to backend developers
+- 💬 **Flexible Prompt Engineering**: Iterate on system prompts without retraining models
+
+#### ❌ Disadvantages
+- ⏱️ **Latency (5-10 seconds)**: Each request needs:
+  - 3 parallel judge API calls (Judge 1, 2, 3)
+  - 1 main AI response generation
+  - Network round-trips to Google servers
+  - Prompt construction and response parsing
+- 💸 **API Costs**: Pay per request (~$0.001-0.01 per judge call)
+- 🔒 **Data Privacy**: User prompts sent to Google (GDPR/compliance concerns)
+- 📊 **No Custom Learning**: Can't train judges on your specific attack patterns
+- 🎯 **Generic Detection**: Judges lack domain-specific context
+- 🚫 **Rate Limits**: Google APIs have quota restrictions (60 requests/minute)
+- 🌐 **Internet Dependency**: Requires stable connection to Google Cloud
+- 🔐 **Third-Party Trust**: Relying on Google's security and uptime
+
+### Production Alternative: Custom LLM Deployment
+
+For enterprise/production use, companies would deploy **self-hosted models**:
+
+#### 🏢 Real-World Architecture
+
+**Judge Models:**
+- 🤖 **Fine-tuned Lightweight LLMs** (e.g., DistilBERT, BERT-tiny, or custom transformers)
+- 📦 **Trained on Company's Attack Logs**: Learn from actual threats to your system
+- ⚡ **Response Time**: 50-200ms per judge (10-20x faster than API calls)
+- 💾 **On-Premise/Cloud GPU**: Deployed on company servers (AWS, GCP, Azure)
+- 🎯 **Domain-Specific**: Understands your industry's unique attack vectors
+
+**Main Chat Model:**
+- 🧠 **Custom LLM** (Llama 3, Mistral, or proprietary model)
+- 📊 **Fine-tuned on Domain Data**: Customer service scripts, product docs, FAQs
+- 🔒 **Data Sovereignty**: All data stays within company infrastructure
+- 💰 **Fixed Cost**: Pay for GPU hours, not per request
+
+#### ✅ Benefits of Custom LLMs
+
+| Aspect | API Approach (Current) | Custom LLM Approach (Production) |
+|--------|------------------------|----------------------------------|
+| **Latency** | 5-10 seconds | 0.5-1 second |
+| **Cost at Scale** | High (per request) | Low (fixed GPU cost) |
+| **Privacy** | Data sent to Google | 100% on-premise |
+| **Customization** | Generic detection | Learns from your attacks |
+| **Accuracy** | Good (general) | Excellent (domain-specific) |
+| **Rate Limits** | Yes (60 req/min) | No limits |
+| **Offline Operation** | ❌ Requires internet | ✅ Works offline |
+| **Initial Setup** | Easy (API key) | Complex (training, deployment) |
+| **Maintenance** | None (Google handles) | High (model updates, monitoring) |
+
+#### 🛠️ Implementation Strategy for Production
+
+**Phase 1: Data Collection (This Project)**
+1. Deploy API-based system to collect real attack patterns
+2. Build dataset from `logs/attacks.json` over 3-6 months
+3. Analyze false positives/negatives
+
+**Phase 2: Model Training**
+1. Fine-tune BERT/DistilBERT on collected attack logs
+2. Train binary classifiers: `[SAFE, UNSAFE]`
+3. Achieve >95% accuracy on test set
+
+**Phase 3: Deployment**
+1. Host models on dedicated GPU servers (NVIDIA T4, A100)
+2. Use TensorRT or ONNX for inference optimization
+3. Deploy with FastAPI inference endpoints
+4. A/B test against API judges
+
+**Phase 4: Continuous Learning**
+1. Weekly retraining on new attack samples
+2. Active learning: flag uncertain predictions for human review
+3. Federated learning: aggregate patterns across customers (privacy-preserving)
+
+### 💡 Why This Project Uses APIs with Prompt Engineering
+
+This portfolio project intentionally uses APIs with **prompt engineering** to:
+- ✅ **Focus on Architecture**: Demonstrate reverse proxy, fail-closed design, async patterns
+- ✅ **Showcase Prompt Engineering**: Craft effective system prompts with examples for AI behavior control
+- ✅ **Accessibility**: Anyone can clone and run without ML expertise, GPUs, or training data
+- ✅ **Cost-Effective Demo**: No need for expensive infrastructure, datasets, or model training
+- ✅ **Interview Talking Point**: Shows understanding of prompt engineering vs fine-tuning trade-offs
+
+**Key Takeaway:** This project proves you understand **security architecture**, **system design**, and **practical AI engineering** (prompt engineering). In interviews, explaining the difference between prompt engineering (instruction-based) and fine-tuning (training-based) demonstrates **production-level AI thinking** beyond just building a working prototype.
+
+---
+
 ## 🎓 Interview Preparation: Key Talking Points
 
 ### For Technical Interviews
@@ -466,7 +578,7 @@ If deploying this for real users, consider:
 
 1. **Judge 1 (Literal)**: Rule-based keyword matching - checks 18+ banned patterns like 'ignore previous' or 'jailbreak'. Fast O(n×m) string search.
 
-2. **Judge 2 (Intent)**: AI-powered semantic analysis using Gemini 2.5 Flash. I use example-driven prompt engineering to train the judge to detect obfuscated attacks that don't use banned keywords.
+2. **Judge 2 (Intent)**: AI-powered semantic analysis using Gemini 2.5 Flash. I use advanced **prompt engineering** with example-driven instructions to guide the model to act as a security classifier, detecting obfuscated attacks that don't use banned keywords.
 
 3. **Judge 3 (Canary)**: Prompt leakage detection. I inject a UUID token into the system prompt and test if the AI reveals it. This catches extraction attempts.
 
