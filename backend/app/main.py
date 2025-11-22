@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import google.generativeai as genai
 
@@ -42,6 +43,15 @@ app = FastAPI(
     title="Project Cerberus - The AI Iron Dome",
     description="A secure reverse proxy for AI APIs with multi-layered security screening",
     version=VERSION
+)
+
+# Configure CORS for Frontend Integration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allow Next.js frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Configure Gemini API for the main chat functionality
