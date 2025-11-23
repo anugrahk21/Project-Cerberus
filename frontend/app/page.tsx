@@ -91,9 +91,8 @@ export default function Home() {
             © 2025 PROJECT CERBERUS. ALL RIGHTS RESERVED.
           </div>
           <div className="flex gap-6 text-zinc-500 text-sm font-mono">
-            <span className="hover:text-white cursor-pointer transition-colors">GITHUB</span>
-            <span className="hover:text-white cursor-pointer transition-colors">TWITTER</span>
-            <span className="hover:text-white cursor-pointer transition-colors">DISCORD</span>
+            <a href="https://github.com/anugrahk21" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">GITHUB</a>
+            <a href="https://www.linkedin.com/in/anugrah-k/" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">LINKEDIN</a>
           </div>
         </div>
       </footer>
