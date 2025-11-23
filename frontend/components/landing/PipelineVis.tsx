@@ -5,11 +5,11 @@ import { ArrowDown, ShieldAlert, ShieldCheck, Search, Brain, Eye, Lock, User } f
 
 export default function PipelineVis() {
   return (
-    <section className="relative py-24 overflow-hidden bg-black text-white">
+    <section className="relative py-12 overflow-hidden bg-black text-white">
       <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none" />
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl font-bold tracking-tight mb-4">The Security Pipeline</h2>
           <p className="text-zinc-500 font-mono text-sm">
             // VISUALIZING_REQUEST_FLOW

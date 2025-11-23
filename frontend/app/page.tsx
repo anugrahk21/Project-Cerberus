@@ -60,10 +60,12 @@ export default function Home() {
               </button>
             </Link>
             
-            <button className="px-8 py-4 rounded-full border border-white/20 text-zinc-400 hover:text-white hover:border-white/50 transition-all flex items-center gap-2">
-              <span>READ THE DOCS</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <Link href="#pipeline">
+              <button className="px-8 py-4 rounded-full border border-white/20 text-zinc-400 hover:text-white hover:border-white/50 transition-all flex items-center gap-2">
+                <span>READ THE DOCS</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -75,7 +77,9 @@ export default function Home() {
       </section>
 
       {/* 2. Pipeline Visualization */}
-      <PipelineVis />
+      <section id="pipeline">
+        <PipelineVis />
+      </section>
 
       {/* 3. Bento Grid Features */}
       <BentoGrid />
