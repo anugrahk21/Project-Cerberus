@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Zap, Lock, Globe, Cpu, Activity, Fingerprint, Code } from "lucide-react";
+import { Shield, Zap, Lock, Globe, Cpu, Activity, Fingerprint, Code, Brain, EyeOff, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BentoCard = ({
@@ -141,6 +141,52 @@ export default function BentoGrid() {
           >
              <div className="h-full flex items-center justify-center">
               <Fingerprint className="w-12 h-12 text-zinc-600 group-hover:text-white group-hover:scale-110 transition-all" />
+            </div>
+          </BentoCard>
+
+          {/* Card 7: Forensic Logging (2x1) */}
+          <BentoCard
+            className="md:col-span-2 md:row-span-1"
+            title="Forensic Logging"
+            description="Tracks attack sources with IP fingerprinting and timestamped audit trails."
+            delay={0.7}
+          >
+            <div className="h-full flex flex-col justify-center px-6 font-mono text-[10px] text-zinc-500 space-y-2 group-hover:text-zinc-300 transition-colors">
+              <div className="flex items-center gap-2 border-l-2 border-red-500 pl-2 bg-red-500/5 py-1 rounded-r">
+                <span className="text-red-500 font-bold">BLOCKED</span> 
+                <span className="text-zinc-400">192.168.1.42</span>
+              </div>
+              <div className="pl-3 flex items-center gap-2">
+                <FileText className="w-3 h-3" />
+                <span>REASON: "Prompt Injection"</span>
+              </div>
+              <div className="pl-3 text-zinc-600">
+                TS: 2025-11-23T10:42:00Z
+              </div>
+            </div>
+          </BentoCard>
+
+          {/* Card 8: Semantic Analysis (1x1) */}
+          <BentoCard
+            className="md:col-span-1 md:row-span-1"
+            title="Semantic Analysis"
+            description="AI understands intent beyond keywords."
+            delay={0.8}
+          >
+            <div className="h-full flex items-center justify-center">
+              <Brain className="w-12 h-12 text-zinc-500 group-hover:text-white group-hover:scale-110 transition-all" />
+            </div>
+          </BentoCard>
+
+          {/* Card 9: Stealth Response (1x1) */}
+          <BentoCard
+            className="md:col-span-1 md:row-span-1"
+            title="Stealth Response"
+            description="Sanitized errors prevent reconnaissance."
+            delay={0.9}
+          >
+            <div className="h-full flex items-center justify-center">
+              <EyeOff className="w-12 h-12 text-zinc-500 group-hover:text-white group-hover:scale-110 transition-all" />
             </div>
           </BentoCard>
         </div>
