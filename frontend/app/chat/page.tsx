@@ -99,7 +99,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 overflow-hidden">
+    <div className="h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 overflow-hidden">
       <CursorSpotlight />
       
       {/* Background Grid */}
@@ -123,7 +123,7 @@ export default function ChatPage() {
 
       <div className="flex-1 flex overflow-hidden z-10">
         {/* Main Chat Area */}
-        <main className="flex-1 flex flex-col relative">
+        <main className="flex-1 flex flex-col relative min-h-0">
           <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
             {messages.map((msg, i) => (
               <motion.div
