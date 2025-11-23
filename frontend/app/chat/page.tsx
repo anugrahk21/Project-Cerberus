@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, Brain, Search, Eye, ArrowLeft, ShieldAlert } from "lucide-react";
+import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, Brain, Search, Eye, ArrowLeft, ShieldAlert, ChevronDown } from "lucide-react";
 import { sendChat, ChatResponse, ChatError, checkHealth } from "@/lib/api";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 
@@ -23,6 +23,7 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<{ role: "user" | "ai"; content: string; isError?: boolean }[]>([]);
   const [isSystemOnline, setIsSystemOnline] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(true);
   
   // Council State
   const [judges, setJudges] = useState<JudgeState[]>([
@@ -32,8 +33,8 @@ export default function ChatPage() {
   ]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
   const inputRef = useRef<HTMLInputElement>(null);
+  const councilRef = useRef<HTMLElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -46,6 +47,21 @@ export default function ChatPage() {
       inputRef.current?.focus();
     }
   }, [messages, isLoading]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowScrollHint(!entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+
+    if (councilRef.current) {
+      observer.observe(councilRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const verifyHealth = async () => {
@@ -128,7 +144,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 overflow-hidden">
+    <div className="lg:h-screen min-h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 lg:overflow-hidden overflow-y-auto">
       <CursorSpotlight />
       
       {/* Background Grid */}
@@ -160,9 +176,9 @@ export default function ChatPage() {
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden z-10">
+      <div className="flex-1 flex flex-col lg:flex-row lg:overflow-hidden z-10">
         {/* Main Chat Area */}
-        <main className="flex-1 flex flex-col relative min-h-0">
+        <main className="flex-1 flex flex-col relative min-h-[calc(100dvh-64px)] lg:h-auto lg:min-h-0">
           <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
             {messages.map((msg, i) => (
               <motion.div
@@ -199,6 +215,23 @@ export default function ChatPage() {
 
           {/* Input Area */}
           <div className="p-6 bg-gradient-to-t from-black to-transparent">
+            {/* Mobile Scroll Hint */}
+            <AnimatePresence>
+              {showScrollHint && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="lg:hidden flex justify-center mb-4"
+                >
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-white/10 backdrop-blur-md animate-bounce">
+                    <span className="text-[10px] font-mono text-zinc-400 tracking-wider">SCROLL FOR VERDICT</span>
+                    <ChevronDown className="w-3 h-3 text-zinc-400" />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <div className="max-w-4xl mx-auto relative bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center gap-2 shadow-2xl">
               <div className="pl-4">
                 <Terminal className="w-5 h-5 text-zinc-500" />
@@ -225,8 +258,8 @@ export default function ChatPage() {
           </div>
         </main>
 
-        {/* The Council Sidebar (Desktop) */}
-        <aside className="w-80 border-l border-white/10 bg-black/40 backdrop-blur-xl hidden lg:flex flex-col p-6 gap-6">
+        {/* The Council Sidebar (Desktop & Mobile) */}
+        <aside ref={councilRef} className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-white/10 bg-black/40 backdrop-blur-xl flex flex-col p-6 gap-6 shrink-0">
           <div className="text-center">
             <h2 className="text-white font-bold text-lg tracking-widest uppercase mb-1 font-sans">The Council</h2>
             <p className="text-xs text-zinc-500 font-mono">SECURITY OVERSIGHT</p>

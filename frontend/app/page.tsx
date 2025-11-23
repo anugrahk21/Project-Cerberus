@@ -87,12 +87,12 @@ export default function Home() {
       {/* 4. Footer */}
       <footer className="py-10 border-t border-white/10 bg-black">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-zinc-500 text-sm font-mono">
-            © 2025 PROJECT CERBERUS. ALL RIGHTS RESERVED.
-          </div>
           <div className="flex gap-6 text-zinc-500 text-sm font-mono">
-            <a href="https://github.com/anugrahk21" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">GITHUB</a>
+            <a href="https://github.com/anugrahk21/Project-Cerberus" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">GITHUB</a>
             <a href="https://www.linkedin.com/in/anugrah-k/" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">LINKEDIN</a>
+          </div>
+          <div className="text-zinc-500 text-sm font-mono">
+            © 2025 PROJECT CERBERUS
           </div>
         </div>
       </footer>
