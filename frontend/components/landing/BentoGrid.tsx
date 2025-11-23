@@ -99,7 +99,7 @@ export default function BentoGrid() {
           >
             <div className="h-full flex items-center justify-center relative">
               <div className="absolute w-full h-[1px] bg-zinc-700 top-1/2 group-hover:bg-white transition-colors" />
-              <Lock className="w-10 h-10 text-zinc-400 z-10 bg-black p-1 border border-zinc-800 rounded-full" />
+              <Lock className="w-10 h-10 text-zinc-400 z-10 bg-black p-1 border border-zinc-800 rounded-full group-hover:scale-110 transition-transform" />
             </div>
           </BentoCard>
 
@@ -110,7 +110,7 @@ export default function BentoGrid() {
             description="Maintains conversation history for coherent multi-turn dialogue."
             delay={0.4}
           >
-            <div className="h-full flex flex-col justify-center gap-2 px-4">
+            <div className="h-full flex flex-col justify-center gap-2 px-4 group-hover:scale-105 transition-transform origin-center">
               <div className="bg-zinc-800/50 p-2 rounded-lg rounded-tl-none text-[10px] font-mono text-zinc-400 w-3/4 border border-white/5">
                 User: What is X?
               </div>
@@ -128,7 +128,7 @@ export default function BentoGrid() {
             delay={0.5}
           >
             <div className="h-full flex items-center justify-center">
-              <Code className="w-12 h-12 text-zinc-500 group-hover:text-white transition-colors" />
+              <Code className="w-12 h-12 text-zinc-500 group-hover:text-white group-hover:scale-110 transition-all" />
             </div>
           </BentoCard>
 
@@ -140,7 +140,7 @@ export default function BentoGrid() {
             delay={0.6}
           >
              <div className="h-full flex items-center justify-center">
-              <Fingerprint className="w-12 h-12 text-zinc-600 group-hover:text-white transition-colors" />
+              <Fingerprint className="w-12 h-12 text-zinc-600 group-hover:text-white group-hover:scale-110 transition-all" />
             </div>
           </BentoCard>
         </div>
