@@ -144,7 +144,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="lg:h-screen min-h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 lg:overflow-hidden overflow-y-auto">
+    <div className="lg:h-screen min-h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 lg:overflow-hidden">
       <CursorSpotlight />
       
       {/* Background Grid */}
@@ -176,9 +176,9 @@ export default function ChatPage() {
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col lg:flex-row lg:overflow-hidden z-10">
+      <div className="flex flex-col lg:flex-row lg:overflow-hidden z-10">
         {/* Main Chat Area */}
-        <main className="flex-1 flex flex-col relative min-h-[calc(100dvh-64px)] lg:h-auto lg:min-h-0">
+        <main className="w-full flex flex-col relative h-[calc(100dvh-64px)] lg:flex-1 lg:h-auto lg:min-h-0 overflow-hidden">
           <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
             {messages.map((msg, i) => (
               <motion.div
@@ -214,7 +214,7 @@ export default function ChatPage() {
           </div>
 
           {/* Input Area */}
-          <div className="p-6 bg-gradient-to-t from-black to-transparent">
+          <div className="shrink-0 p-6 bg-gradient-to-t from-black to-transparent">
             {/* Mobile Scroll Hint */}
             <AnimatePresence>
               {showScrollHint && (
