@@ -48,7 +48,10 @@ app = FastAPI(
 # Configure CORS for Frontend Integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allow Next.js frontend
+    allow_origins=[
+        "http://localhost:3000",
+        "https://project-cerberus-pi.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
