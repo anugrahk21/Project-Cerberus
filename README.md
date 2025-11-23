@@ -28,7 +28,7 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 
 ## � Table of Contents
 
-1. 🚀 [What's New](#-whats-new-in-v10-enhanced-security-build)
+1. 🚀 [What's New](#-whats-new-in-v20-enhanced-security-build)
 2. 🧠 [Technical Concepts](#-technical-concepts-demonstrated)
 3. 🏗️ [Project Structure](#️-project-structure)
 4. 🔧 [Setup Instructions](#-setup-instructions)
@@ -47,6 +47,10 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 17. 🤝 [Contributing](#-contributing)
 18. 🌟 [Acknowledgments](#-acknowledgments)
 19. 📝 [Version History](#-version-history)
+20. 🎨 [Frontend Architecture & UI/UX](#-frontend-architecture--uiux)
+21. ⚖️ [Weighted Voting System Deep Dive](#️-weighted-voting-system-deep-dive)
+22. 🚦 [Rate Limiting Architecture](#-rate-limiting-architecture)
+23. 🛑 [All Blocking & Stopping Mechanisms](#-all-blocking--stopping-mechanisms)
 
 ---
 
