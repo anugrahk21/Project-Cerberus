@@ -1,4 +1,4 @@
-# 🛡️ Project Cerberus: The AI Iron Dome
+﻿# 🛡️ Project Cerberus: The AI Iron Dome
 
 **A Production-Grade Multi-Layered Security System for AI API Protection**
 
@@ -8,9 +8,9 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)
 ![Gemini](https://img.shields.io/badge/Gemini-2.5-orange.svg)
 ![Security](https://img.shields.io/badge/Security-Hardened-red.svg)
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 📖 Project Overview
 
 **Project Cerberus** is a **secure reverse proxy** that acts as a protective layer between users and AI language models (specifically Google's Gemini 2.5). It implements a **3-judge security council** with **parallel execution**, **context-aware conversations**, **prompt engineering**, and **fail-closed architecture** that screens every request for:
@@ -23,10 +23,11 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 - 📍 **Attack Source Tracking** (IP address logging for forensic analysis)
 
 **Key Concept:** Like Cerberus, the three-headed guardian of the underworld, this system has three independent "heads" (judges) that must **ALL approve unanimously** before allowing a request through. If any judge fails or rejects, the request is blocked.
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
-## � Table of Contents
+<a name="table-of-contents"></a>
+##  Table of Contents
 
 1. 🚀 [What's New](#-whats-new-in-v20-enhanced-security-build)
 2. 🧠 [Technical Concepts](#-technical-concepts-demonstrated)
@@ -51,9 +52,9 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 21. 👤 [Author](#-author)
 22. 🤝 [Contributing](#-contributing)
 23. 🌟 [Acknowledgments](#-acknowledgments)
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🚀 What's New in v2.0 (Enhanced Security Build)
 
 ### 🔐 Major Security Enhancements
@@ -120,9 +121,9 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 - 🎯 **Improved Accuracy**: Reduced false negatives through advanced prompt engineering techniques
 - 🔍 **18+ Banned Keywords**: Expanded keyword list including jailbreak patterns
 - 💬 **Zero-Shot Classification**: Instructing Gemini API to act as security classifiers without model fine-tuning
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🧠 Technical Concepts Demonstrated
 
 This project showcases advanced Computer Science and Cybersecurity concepts:
@@ -158,9 +159,9 @@ This project showcases advanced Computer Science and Cybersecurity concepts:
 2. 🎯 **Zero-Shot Classification** - Using pre-trained models for security tasks without fine-tuning
 3. 🧠 **Few-Shot Learning** - Providing SAFE/UNSAFE examples in prompts for better accuracy
 4. 🔄 **Context Management** - Session history replay for multi-turn conversation coherence
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🏗️ Project Structure
 
 ```
@@ -195,9 +196,9 @@ Project_Cerberus/
 │   └── .next/               # Next.js build output (gitignored)
 └── README.md                # You are here!
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🔧 Setup Instructions
 
 ### Prerequisites
@@ -268,9 +269,9 @@ The frontend will be available at `http://localhost:3000` with:
 - 💚 Real-time system status monitoring
 - 🎮 Interactive chat interface with council visualization
 - 🚦 Rate limit notifications and countdown timers
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🎮 How to Use
 
 ### 1. Health Check (Verify Server is Running)
@@ -411,9 +412,9 @@ curl -X POST http://127.0.0.1:8000/session/reset
   "history_length": 0
 }
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🔍 How It Works: The Security Pipeline
 
 ```
@@ -504,9 +505,9 @@ curl -X POST http://127.0.0.1:8000/session/reset
 6. **IP Logging**: Attacker source address tracked for forensic analysis
 7. **Context Replay**: Session history included in every request for multi-turn conversations
 8. **Response Scanning**: AI output checked for canary leakage before returning to user
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🧪 Testing the System
 
 ### Test Case 1: Normal Question (Expected: ✅ Pass)
@@ -556,9 +557,9 @@ curl -X POST http://127.0.0.1:8000/chat ^
   -H "Content-Type: application/json" ^
   -d "{\"prompt\": \"Give me an example of it in real life\"}"
 ```
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 📊 Performance & Scalability
 
 ### Current Implementation (Single-User Demo)
@@ -576,9 +577,9 @@ If deploying this for real users, consider:
 5. **Load Balancing**: Deploy multiple instances behind nginx/HAProxy
 6. **Monitoring**: Add Prometheus metrics and Grafana dashboards
 7. **CDN**: Serve static assets via CloudFlare or similar
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## ⚖️ API vs Custom LLM Approach
 
 ### 🎓 Educational Context: Portfolio Project Limitations
@@ -680,11 +681,12 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
 - ✅ **Interview Talking Point**: Shows understanding of prompt engineering vs fine-tuning trade-offs
 
 **Key Takeaway:** This project proves you understand **security architecture**, **system design**, and **practical AI engineering** (prompt engineering). In interviews, explaining the difference between prompt engineering (instruction-based) and fine-tuning (training-based) demonstrates **production-level AI thinking** beyond just building a working prototype.
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🎨 Frontend Architecture & UI/UX
 
 ### Modern Tech Stack
@@ -745,9 +747,9 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
 - **Text Scramble**: Cyberpunk-style typewriter effect
 - **Scale Hover**: Subtle 105% scale on interactive elements
 - **Pulse Animations**: Status indicators and countdown timers
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## ⚖️ Weighted Voting System Deep Dive
 
 ### The Problem with Unanimous Voting
@@ -792,9 +794,9 @@ is_safe = risk_score < BLOCKING_THRESHOLD
 - 🧠 **AI-Powered Overrides**: Intent judge (3x) can override keyword matches (1x)
 - 🔴 **Critical Threats Prioritized**: Canary (4x) always blocks when triggered
 - 📊 **Transparent Reasoning**: Risk score visible in logs for debugging
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🛑 All Blocking & Stopping Mechanisms
 
 Project Cerberus employs **multiple layers of defense** to stop malicious requests. Here's every way the system blocks or rate-limits users:
@@ -971,9 +973,9 @@ Project Cerberus employs **multiple layers of defense** to stop malicious reques
 - 🌐 **Backend is Source of Truth**: Frontend blocks are UX enhancements, not security
 - 📊 **Transparent Logging**: All blocks recorded with timestamps, IPs, and reasons
 - ⚖️ **Smart Blocking**: Weighted voting reduces false positives while maintaining security
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🎓 Interview Preparation: Key Talking Points
 
 ### For Technical Interviews
@@ -1005,9 +1007,9 @@ The frontend is built with Next.js 16 and features:
 - Mobile-responsive design with glassmorphic UI
 
 The system logs all blocked requests with timestamps, IP addresses, risk scores, and judge verdicts to a JSON audit trail."
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 **Q: "What security vulnerabilities does this protect against?"**
 
 *A:* "The system defends against multiple attack vectors:
@@ -1028,9 +1030,9 @@ The system logs all blocked requests with timestamps, IP addresses, risk scores,
 6. **Information Disclosure**: Generic error messages prevent attackers from learning about internal security mechanisms.
 
 7. **Reconnaissance**: IP logging enables detection of repeated attack attempts from the same source."
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 **Q: "Why did you choose Python and FastAPI?"**
 
 *A:* "I chose Python because it has excellent async support (asyncio) for parallel I/O operations, and the Gemini SDK is native Python. FastAPI was ideal because:
@@ -1042,9 +1044,9 @@ The system logs all blocked requests with timestamps, IP addresses, risk scores,
 5. **Type hints**: Better IDE support and fewer runtime errors
 
 For production, I'd benchmark this against FastAPI alternatives like Starlette or even rewrite critical paths in Rust with PyO3 bindings if latency becomes an issue."
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 **Q: "How would you scale this for 10,000 concurrent users?"**
 
 *A:* "Great question. The current implementation is a single-user demo. For production scale:
@@ -1071,9 +1073,9 @@ For production, I'd benchmark this against FastAPI alternatives like Starlette o
 3. Implement request batching for high-throughput scenarios
 
 The asyncio architecture is already scalable - the bottleneck would be the Gemini API rate limits, not my code."
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 **Q: "What would you improve if you had more time?"**
 
 *A:* "Several enhancements I'd prioritize:
@@ -1110,9 +1112,9 @@ The asyncio architecture is already scalable - the bottleneck would be the Gemin
 4. **Performance Optimization**: React.memo, code splitting, image optimization
 
 The current v2.0 is a production-ready demo showcasing full-stack skills, but these additions would make it enterprise-grade."
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🛠️ Technologies Used
 
 ### Backend Stack
@@ -1144,9 +1146,9 @@ The current v2.0 is a production-ready demo showcasing full-stack skills, but th
 | **Type Safety**         | TypeScript 5                | Static type checking                 |
 | **State Management**    | React Hooks + localStorage  | Client-side persistence              |
 | **Utilities**           | clsx, tailwind-merge        | Conditional & merged className       |
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🔐 Security Considerations
 
 ### What This System Protects Against
@@ -1174,9 +1176,9 @@ The current v2.0 is a production-ready demo showcasing full-stack skills, but th
 3. **API Key Rotation**: Rotate Gemini API keys quarterly (least privilege principle)
 4. **Incident Response Plan**: Document procedures for zero-day discoveries
 5. **Penetration Testing**: Hire external red team to audit the system annually
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🚨 Troubleshooting
 
 ### Issue: "❌ GEMINI_API_KEY not found..."
@@ -1206,9 +1208,9 @@ Then update `app/main.py` and `app/judges.py` with the new model names.
 3. Update `.env` with new key
 4. Google's automated scanners may already have detected and disabled the old key (sends email alert)
 5. The `.gitignore` file now prevents future leaks
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 📚 Learning Resources
 
 If you're new to these concepts, here are some recommended resources:
@@ -1226,9 +1228,9 @@ If you're new to these concepts, here are some recommended resources:
 ### Reverse Proxy Design
 - [nginx as a Reverse Proxy](https://www.nginx.com/resources/glossary/reverse-proxy/)
 - [System Design Primer](https://github.com/donnemartin/system-design-primer)
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## � Version History
 
 **v2.0** (November 2025) - Production-Ready Full-Stack Build
@@ -1257,17 +1259,17 @@ If you're new to these concepts, here are some recommended resources:
 - 📐 System architecture planning (3-judge council design)
 - 🔍 Security research (prompt injection, canary tokens, fail-closed patterns)
 - 🏗️ Technology stack selection (FastAPI, Gemini, Python asyncio)
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## �📜 License
 
 This project is open-source under the **MIT License**. Feel free to use it for learning, portfolios, or as a foundation for your own projects.
 
 **Note:** This is a student portfolio project demonstrating cybersecurity concepts. For production use, conduct thorough security audits and implement additional hardening measures.
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 👤 Author
 
 **Anugrah K.**  
@@ -1275,9 +1277,9 @@ AI & Cybersecurity Enthusiast
 📧 [Email](mailto:anugrah.k910@gmail.com)  
 🔗 [GitHub Profile](https://github.com/anugrahk21)  
 💼 [LinkedIn](https://linkedin.com/in/anugrah-k)
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🤝 Contributing
 
 Contributions are welcome! Whether you're fixing bugs, improving documentation, or proposing new features, your help is appreciated.
@@ -1334,16 +1336,18 @@ Contributions are welcome! Whether you're fixing bugs, improving documentation, 
 - Test your changes before submitting
 - Keep pull requests focused on a single feature/fix
 - Update documentation to reflect your changes
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 ## 🌟 Acknowledgments
 
 - Google for the Gemini API and excellent documentation
 - The FastAPI community for an amazing web framework
 - Simon Willison and researchers for prompt injection awareness
 - The open-source security community for attack pattern databases
+<p align="right">(<a href="#table-of-contents">back to top</a>)</p>
 
 ---
-
 **Made with ❤️ and ☕ for AI Security**
+
+
