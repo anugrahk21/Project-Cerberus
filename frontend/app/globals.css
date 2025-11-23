@@ -47,6 +47,25 @@ body {
   .animate-wavePulse {
     animation: wavePulse 8s ease-in-out infinite;
   }
+
+  /* Custom Scrollbar for Dark Theme */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #27272a; /* zinc-800 */
+    border-radius: 9999px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46; /* zinc-700 */
+  }
 }
 
 @keyframes corePulse {
