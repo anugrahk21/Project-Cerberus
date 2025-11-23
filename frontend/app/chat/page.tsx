@@ -21,9 +21,7 @@ interface JudgeState {
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<{ role: "user" | "ai"; content: string; isError?: boolean }[]>([
-    { role: "ai", content: "System initialized. Cerberus is active. How can I assist you safely?" },
-  ]);
+  const [messages, setMessages] = useState<{ role: "user" | "ai"; content: string; isError?: boolean }[]>([]);
   const [isSystemOnline, setIsSystemOnline] = useState(false);
   
   // Council State
@@ -47,6 +45,19 @@ export default function ChatPage() {
     const verifyHealth = async () => {
       const online = await checkHealth();
       setIsSystemOnline(online);
+
+      setMessages(prev => {
+        if (prev.length === 0) {
+          return [{ 
+            role: "ai", 
+            content: online 
+              ? "System initialized. Cerberus is active. How can I assist you safely?" 
+              : "System unreachable. The backend server appears to be offline. Please check your connection.",
+            isError: !online
+          }];
+        }
+        return prev;
+      });
     };
     
     verifyHealth();
@@ -191,13 +202,13 @@ export default function ChatPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Enter command or prompt..."
-                disabled={isLoading}
+                placeholder={isSystemOnline ? "Enter command or prompt..." : "System offline - connection required"}
+                disabled={isLoading || !isSystemOnline}
                 className="flex-1 bg-transparent border-none text-white placeholder-zinc-600 focus:ring-0 focus:outline-none py-3 px-2 font-mono text-sm"
               />
               <button
                 onClick={handleSend}
-                disabled={isLoading || !input.trim()}
+                disabled={isLoading || !input.trim() || !isSystemOnline}
                 className="p-3 rounded-xl bg-white text-black hover:bg-zinc-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-500"
               >
                 <Send className="w-5 h-5" />
