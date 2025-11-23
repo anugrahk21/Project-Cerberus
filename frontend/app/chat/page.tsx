@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, Brain, Search, Eye, ArrowLeft, ShieldAlert } from "lucide-react";
-import { sendChat, ChatResponse, ChatError } from "@/lib/api";
+import { sendChat, ChatResponse, ChatError, checkHealth } from "@/lib/api";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 
 // Types for the Council Visualization
@@ -24,6 +24,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<{ role: "user" | "ai"; content: string; isError?: boolean }[]>([
     { role: "ai", content: "System initialized. Cerberus is active. How can I assist you safely?" },
   ]);
+  const [isSystemOnline, setIsSystemOnline] = useState(false);
   
   // Council State
   const [judges, setJudges] = useState<JudgeState[]>([
@@ -41,6 +42,17 @@ export default function ChatPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const verifyHealth = async () => {
+      const online = await checkHealth();
+      setIsSystemOnline(online);
+    };
+    
+    verifyHealth();
+    const interval = setInterval(verifyHealth, 30000); // Check every 30s
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -114,9 +126,19 @@ export default function ChatPage() {
           <span className="font-bold text-lg tracking-tight text-white font-sans">PROJECT CERBERUS</span>
         </Link>
         <div className="ml-auto flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
-            <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-            <span className="text-xs text-zinc-400 font-mono tracking-wider">SYSTEM ONLINE</span>
+          <div className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-colors ${
+            isSystemOnline 
+              ? "bg-green-500/10 border-green-500/20" 
+              : "bg-red-500/10 border-red-500/20"
+          }`}>
+            <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+              isSystemOnline ? "bg-green-500" : "bg-red-500"
+            }`} />
+            <span className={`text-xs font-mono tracking-wider ${
+              isSystemOnline ? "text-green-400" : "text-red-400"
+            }`}>
+              {isSystemOnline ? "SYSTEM ONLINE" : "SYSTEM OFFLINE"}
+            </span>
           </div>
         </div>
       </header>

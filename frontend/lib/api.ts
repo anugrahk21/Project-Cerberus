@@ -47,4 +47,13 @@ export const resetSession = async () => {
   return response.data;
 };
 
+export const checkHealth = async () => {
+  try {
+    const response = await api.get('/');
+    return response.data.status === 'online';
+  } catch (error) {
+    return false;
+  }
+};
+
 export default api;
