@@ -33,13 +33,19 @@ export default function ChatPage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+    // Auto-focus input after message is sent/received
+    if (!isLoading) {
+      inputRef.current?.focus();
+    }
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const verifyHealth = async () => {
@@ -198,12 +204,14 @@ export default function ChatPage() {
                 <Terminal className="w-5 h-5 text-zinc-500" />
               </div>
               <input
+                ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
                 placeholder={isSystemOnline ? "Enter command or prompt..." : "System offline - connection required"}
                 disabled={isLoading || !isSystemOnline}
+                autoFocus
                 className="flex-1 bg-transparent border-none text-white placeholder-zinc-600 focus:ring-0 focus:outline-none py-3 px-2 font-mono text-sm"
               />
               <button
