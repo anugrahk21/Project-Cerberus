@@ -723,11 +723,16 @@ The system logs all blocked requests with timestamps, IP addresses, risk scores,
 
 3. **Jailbreak Attempts**: Judge 2's semantic analysis catches DAN mode, roleplaying tricks, and social engineering that bypasses keyword filters.
 
-4. **Judge Evasion**: The fail-closed architecture means if an attacker finds a way to crash a judge (e.g., via API rate limits), the system blocks the request instead of allowing it through.
+4. **Rate Limit Bypass Attempts**: Dual-layer enforcement:
+   - Frontend localStorage can be cleared, but backend IP tracking is the source of truth
+   - Rolling 24-hour window prevents midnight reset exploits
+   - Returns HTTP 429 with exact retry-after countdown
 
-5. **Information Disclosure**: Generic error messages prevent attackers from learning about internal security mechanisms.
+5. **Judge Evasion**: The fail-closed architecture means if an attacker finds a way to crash a judge (e.g., via API rate limits), the system blocks the request instead of allowing it through.
 
-6. **Reconnaissance**: IP logging enables detection of repeated attack attempts from the same source."
+6. **Information Disclosure**: Generic error messages prevent attackers from learning about internal security mechanisms.
+
+7. **Reconnaissance**: IP logging enables detection of repeated attack attempts from the same source."
 
 ---
 
@@ -855,14 +860,18 @@ The current v2.0 is a production-ready demo showcasing full-stack skills, but th
 - ✅ System prompt extraction attacks
 - ✅ XML tag breakout attempts
 - ✅ Information disclosure via verbose errors
-- ✅ Repeated attacks from same source (via IP logging)
+- ✅ **Rate limit bypass attempts** (dual-layer enforcement)
+- ✅ **Quota exhaustion attacks** (3 prompts per 24-hour rolling window)
+- ✅ **IP-based abuse** (per-source tracking and blocking)
+- ✅ Repeated attacks from same source (via IP logging and rate limits)
 
 ### What This System DOES NOT Protect Against
 - ❌ **Model-level vulnerabilities**: If Gemini itself has a zero-day exploit, judges may not catch it
 - ❌ **Novel attack patterns**: Judges are trained on known attacks; completely new techniques may bypass
 - ❌ **Physical attacks**: No protection against compromised API keys or stolen credentials
 - ❌ **Side-channel attacks**: Timing attacks or model behavior analysis not addressed
-- ❌ **Distributed attacks**: Single IP logging doesn't prevent botnets or VPN evasion
+- ❌ **Distributed attacks**: Single IP logging doesn't prevent botnets or VPN evasion (would need distributed rate limiting with Redis)
+- ❌ **API key rotation**: Attackers with multiple API keys can bypass rate limits (would need account-based tracking)
 
 ### Recommendations for Production Deployment
 1. **Regular Judge Updates**: Retrain/update judge prompts monthly based on new attack research
