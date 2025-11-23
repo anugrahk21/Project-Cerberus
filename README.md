@@ -37,20 +37,20 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 7. 🧪 [Testing](#-testing-the-system)
 8. 📊 [Performance & Scalability](#-performance--scalability)
 9. ⚖️ [API vs Custom LLM Approach](#️-api-vs-custom-llm-approach)
-10. 🎓 [Interview Preparation](#-interview-preparation-key-talking-points)
-11. 🛠️ [Technologies Used](#️-technologies-used)
-12. 🔐 [Security Considerations](#-security-considerations)
-13. 🚨 [Troubleshooting](#-troubleshooting)
-14. 📚 [Learning Resources](#-learning-resources)
-15. 📜 [License](#-license)
-16. 👤 [Author](#-author)
-17. 🤝 [Contributing](#-contributing)
-18. 🌟 [Acknowledgments](#-acknowledgments)
+10. � [Frontend Architecture & UI/UX](#-frontend-architecture--uiux)
+11. ⚖️ [Weighted Voting System Deep Dive](#️-weighted-voting-system-deep-dive)
+12. 🚦 [Rate Limiting Architecture](#-rate-limiting-architecture)
+13. 🛑 [All Blocking & Stopping Mechanisms](#-all-blocking--stopping-mechanisms)
+14. 🎓 [Interview Preparation](#-interview-preparation-key-talking-points)
+15. 🛠️ [Technologies Used](#️-technologies-used)
+16. 🔐 [Security Considerations](#-security-considerations)
+17. 🚨 [Troubleshooting](#-troubleshooting)
+18. 📚 [Learning Resources](#-learning-resources)
 19. 📝 [Version History](#-version-history)
-20. 🎨 [Frontend Architecture & UI/UX](#-frontend-architecture--uiux)
-21. ⚖️ [Weighted Voting System Deep Dive](#️-weighted-voting-system-deep-dive)
-22. 🚦 [Rate Limiting Architecture](#-rate-limiting-architecture)
-23. 🛑 [All Blocking & Stopping Mechanisms](#-all-blocking--stopping-mechanisms)
+20. 📜 [License](#-license)
+21. 👤 [Author](#-author)
+22. 🤝 [Contributing](#-contributing)
+23. 🌟 [Acknowledgments](#-acknowledgments)
 
 ---
 
@@ -683,376 +683,6 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
 
 ---
 
-## 🎓 Interview Preparation: Key Talking Points
-
-### For Technical Interviews
-
-**Q: "Walk me through the architecture of this project."**
-
-*A:* "Project Cerberus is a full-stack AI security system with both a FastAPI backend and Next.js frontend. When a user sends a prompt, it goes through multiple security layers:
-
-1. **Rate Limiting (Dual-Layer)**: 
-   - Frontend tracks prompts in localStorage (3 per session)
-   - Backend enforces IP-based rolling window (3 per 24 hours)
-   - Returns HTTP 429 with retry-after countdown
-
-2. **Weighted Voting Council**: Three judges run in parallel via asyncio.gather():
-   - **Literal Judge (1x weight)**: Fast keyword matching for obvious attacks
-   - **Intent Judge (3x weight)**: AI-powered semantic analysis using Gemini Flash with prompt engineering
-   - **Canary Judge (4x weight)**: System prompt leakage detection with UUID tokens
-
-3. **Risk Score Algorithm**: Instead of unanimous voting, I calculate a weighted risk score. If the total exceeds a threshold (2), the request is blocked. This allows the Intent judge to override false positives from the Literal judge - for example, "What is hacking?" would trigger Literal (1) but Intent approves (0), resulting in score 1 < 2, so it passes.
-
-4. **Fail-Closed Architecture**: If any judge throws an exception, the system adds maximum risk (10) to guarantee blocking, returning 503 instead of allowing potentially dangerous requests through.
-
-For context-aware conversations, I maintain a session history that gets replayed in every prompt. I also embed the canary in the live system prompt and scan responses for leakage before returning to the user.
-
-The frontend is built with Next.js 16 and features:
-- Real-time system status monitoring (green/red pulse badge)
-- Live council visualization showing each judge's verdict
-- Smooth animations with Framer Motion
-- Mobile-responsive design with glassmorphic UI
-
-The system logs all blocked requests with timestamps, IP addresses, risk scores, and judge verdicts to a JSON audit trail."
-
----
-
-**Q: "What security vulnerabilities does this protect against?"**
-
-*A:* "The system defends against multiple attack vectors:
-
-1. **Direct Prompt Injection**: The XML wrapper with HTML entity escaping prevents users from breaking out with tags like `</user_input><malicious>`.
-
-2. **System Prompt Extraction**: The dual canary system (test + live embedding) detects if attackers successfully extract hidden instructions.
-
-3. **Jailbreak Attempts**: Judge 2's semantic analysis catches DAN mode, roleplaying tricks, and social engineering that bypasses keyword filters.
-
-4. **Rate Limit Bypass Attempts**: Dual-layer enforcement:
-   - Frontend localStorage can be cleared, but backend IP tracking is the source of truth
-   - Rolling 24-hour window prevents midnight reset exploits
-   - Returns HTTP 429 with exact retry-after countdown
-
-5. **Judge Evasion**: The fail-closed architecture means if an attacker finds a way to crash a judge (e.g., via API rate limits), the system blocks the request instead of allowing it through.
-
-6. **Information Disclosure**: Generic error messages prevent attackers from learning about internal security mechanisms.
-
-7. **Reconnaissance**: IP logging enables detection of repeated attack attempts from the same source."
-
----
-
-**Q: "Why did you choose Python and FastAPI?"**
-
-*A:* "I chose Python because it has excellent async support (asyncio) for parallel I/O operations, and the Gemini SDK is native Python. FastAPI was ideal because:
-
-1. **Native async/await**: Supports concurrent judge execution without threading complexity
-2. **Automatic validation**: Pydantic models catch malformed requests before they reach my code
-3. **OpenAPI docs**: Auto-generated API documentation at `/docs` endpoint
-4. **Performance**: Comparable to Node.js/Go for I/O-bound workloads like API calls
-5. **Type hints**: Better IDE support and fewer runtime errors
-
-For production, I'd benchmark this against FastAPI alternatives like Starlette or even rewrite critical paths in Rust with PyO3 bindings if latency becomes an issue."
-
----
-
-**Q: "How would you scale this for 10,000 concurrent users?"**
-
-*A:* "Great question. The current implementation is a single-user demo. For production scale:
-
-**Immediate Changes:**
-1. Replace in-memory `SESSION_HISTORY` with Redis (sub-millisecond lookups, TTL support)
-2. Move attack logs to PostgreSQL with proper indexing on `timestamp` and `ip_address`
-3. Add API authentication (JWT tokens) and rate limiting (10 req/min per user)
-
-**Infrastructure:**
-1. Deploy behind a load balancer (nginx/HAProxy) with health checks
-2. Run multiple FastAPI instances (horizontal scaling)
-3. Use connection pooling for Gemini API calls
-4. Add a CDN for static assets
-
-**Observability:**
-1. Prometheus metrics (request latency, judge pass/fail rates, error rates)
-2. Structured logging with ELK stack (Elasticsearch, Logstash, Kibana)
-3. Distributed tracing with OpenTelemetry to debug slow requests
-
-**Cost Optimization:**
-1. Cache safe prompts (if they repeat, skip judge checks)
-2. Use cheaper models for judges (Gemini Flash is already cost-effective)
-3. Implement request batching for high-throughput scenarios
-
-The asyncio architecture is already scalable - the bottleneck would be the Gemini API rate limits, not my code."
-
----
-
-**Q: "What would you improve if you had more time?"**
-
-*A:* "Several enhancements I'd prioritize:
-
-**Security:**
-1. **Adaptive Judges**: Train custom ML classifiers on collected attack logs (supervised learning)
-2. **Honeypot Responses**: Return fake data to attackers instead of blocking (catch more intel)
-3. **Dynamic Thresholds**: Adjust blocking threshold based on user reputation
-4. **Encrypted Canaries**: Use HMAC signatures instead of plaintext UUIDs
-
-**Features:**
-1. **Multi-User Sessions**: Replace in-memory storage with Redis for distributed rate limiting
-2. **Streaming Responses**: Support SSE (Server-Sent Events) for real-time AI output with token-by-token validation
-3. **Configurable Judge Weights**: Admin dashboard to tune weights based on false positive/negative rates
-4. **User Authentication**: JWT-based auth to track users across devices
-
-**Frontend Enhancements:**
-1. **Dark/Light Mode Toggle**: Theme switcher with system preference detection
-2. **Attack Visualization Dashboard**: Real-time graphs of blocked requests, judge performance metrics
-3. **Export Chat History**: Download conversations as JSON/PDF
-4. **Accessibility Improvements**: Screen reader optimization, keyboard navigation
-
-**DevOps:**
-1. **Docker Containerization**: Multi-stage builds for backend + frontend
-2. **CI/CD Pipeline**: GitHub Actions for automated testing, linting, and Vercel deployment
-3. **Integration Tests**: Playwright for E2E frontend testing, pytest for backend
-4. **Load Testing**: k6 scripts to benchmark rate limiting and judge performance under load
-5. **Monitoring**: Sentry for error tracking, Prometheus + Grafana for metrics
-
-**Code Quality:**
-1. **Type Checking**: Add mypy for stricter backend type validation
-2. **Linting**: Pre-commit hooks with black, ruff, eslint, prettier
-3. **Component Library**: Storybook for UI component documentation
-4. **Performance Optimization**: React.memo, code splitting, image optimization
-
-The current v2.0 is a production-ready demo showcasing full-stack skills, but these additions would make it enterprise-grade."
-
----
-
-## 🛠️ Technologies Used
-
-### Backend Stack
-
-| Component               | Technology                  | Purpose                              |
-|-------------------------|-----------------------------|--------------------------------------|
-| **Backend Framework**   | FastAPI 0.104.1             | Async REST API with automatic docs   |
-| **AI Model**            | Gemini 2.5 Pro              | Main chat (high-quality responses)   |
-| **Judge Model**         | Gemini 2.5 Flash            | Security screening (fast, cheap)     |
-| **Async Runtime**       | asyncio (Python 3.10+)      | Concurrent judge execution           |
-| **Validation**          | Pydantic 2.5.0              | Request schema validation            |
-| **Server**              | Uvicorn 0.24.0 (ASGI)       | Production-grade async server        |
-| **Config Management**   | python-dotenv 1.0.0         | Environment variable loading         |
-| **XML Escaping**        | html.escape (stdlib)        | Prevent tag injection                |
-| **Unique IDs**          | uuid (stdlib)               | Canary token generation              |
-| **Logging**             | JSON (stdlib)               | Structured attack audit trail        |
-| **CORS**                | FastAPI CORSMiddleware      | Cross-origin requests for frontend   |
-
-### Frontend Stack
-
-| Component               | Technology                  | Purpose                              |
-|-------------------------|-----------------------------|--------------------------------------|
-| **Framework**           | Next.js 16.0.3              | React framework with App Router      |
-| **UI Library**          | React 19.2.0                | Component-based UI                   |
-| **Styling**             | Tailwind CSS 4              | Utility-first CSS framework          |
-| **Animations**          | Framer Motion 12.23.24      | Production-ready motion library      |
-| **Icons**               | Lucide React 0.554.0        | Beautiful & consistent icons         |
-| **HTTP Client**         | Axios 1.13.2                | Promise-based HTTP requests          |
-| **Type Safety**         | TypeScript 5                | Static type checking                 |
-| **State Management**    | React Hooks + localStorage  | Client-side persistence              |
-| **Utilities**           | clsx, tailwind-merge        | Conditional & merged className       |
-
----
-
-## 🔐 Security Considerations
-
-### What This System Protects Against
-- ✅ Keyword-based prompt injection
-- ✅ Semantic jailbreak attempts (DAN mode, roleplay exploits)
-- ✅ System prompt extraction attacks
-- ✅ XML tag breakout attempts
-- ✅ Information disclosure via verbose errors
-- ✅ **Rate limit bypass attempts** (dual-layer enforcement)
-- ✅ **Quota exhaustion attacks** (3 prompts per 24-hour rolling window)
-- ✅ **IP-based abuse** (per-source tracking and blocking)
-- ✅ Repeated attacks from same source (via IP logging and rate limits)
-
-### What This System DOES NOT Protect Against
-- ❌ **Model-level vulnerabilities**: If Gemini itself has a zero-day exploit, judges may not catch it
-- ❌ **Novel attack patterns**: Judges are trained on known attacks; completely new techniques may bypass
-- ❌ **Physical attacks**: No protection against compromised API keys or stolen credentials
-- ❌ **Side-channel attacks**: Timing attacks or model behavior analysis not addressed
-- ❌ **Distributed attacks**: Single IP logging doesn't prevent botnets or VPN evasion (would need distributed rate limiting with Redis)
-- ❌ **API key rotation**: Attackers with multiple API keys can bypass rate limits (would need account-based tracking)
-
-### Recommendations for Production Deployment
-1. **Regular Judge Updates**: Retrain/update judge prompts monthly based on new attack research
-2. **Bug Bounty Program**: Incentivize security researchers to find bypasses
-3. **API Key Rotation**: Rotate Gemini API keys quarterly (least privilege principle)
-4. **Incident Response Plan**: Document procedures for zero-day discoveries
-5. **Penetration Testing**: Hire external red team to audit the system annually
-
----
-
-## 🚨 Troubleshooting
-
-### Issue: "❌ GEMINI_API_KEY not found..."
-**Solution:** Create a `.env` file in the project root with your API key:
-```env
-GEMINI_API_KEY=your_actual_key_here
-VERSION=1.0
-```
-
-### Issue: "404 Not Found" when calling Gemini API
-**Solution:** Check model names. This project uses `gemini-2.5-pro` and `gemini-2.5-flash`. If Google deprecates these, run:
-```bash
-python check_models.py
-```
-Then update `app/main.py` and `app/judges.py` with the new model names.
-
-### Issue: Session history not working
-**Solution:** Ensure you're using the same FastAPI instance. Restart the server with `uvicorn --reload` if needed. Session data is lost on restart (in-memory storage).
-
-### Issue: All prompts blocked (too aggressive)
-**Solution:** This may happen if the Gemini Flash API is rate-limited or down. Check `app/judges.py` logs for errors. The system fails closed (blocks) when judges are unavailable.
-
-### Issue: API Key Leaked to GitHub
-**Solution:** 
-1. Immediately revoke the key at [Google AI Studio](https://ai.google.dev/)
-2. Generate a new API key
-3. Update `.env` with new key
-4. Google's automated scanners may already have detected and disabled the old key (sends email alert)
-5. The `.gitignore` file now prevents future leaks
-
----
-
-## 📚 Learning Resources
-
-If you're new to these concepts, here are some recommended resources:
-
-### Prompt Injection & AI Security
-- [Simon Willison's Blog: Prompt Injection](https://simonwillison.net/series/prompt-injection/)
-- [OWASP Top 10 for LLMs](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
-- [Research Paper: Prompt Injection Attacks](https://arxiv.org/abs/2302.12173)
-
-### FastAPI & Async Python
-- [FastAPI Official Tutorial](https://fastapi.tiangolo.com/tutorial/)
-- [Python asyncio Documentation](https://docs.python.org/3/library/asyncio.html)
-- [Real Python: Async IO in Python](https://realpython.com/async-io-python/)
-
-### Reverse Proxy Design
-- [nginx as a Reverse Proxy](https://www.nginx.com/resources/glossary/reverse-proxy/)
-- [System Design Primer](https://github.com/donnemartin/system-design-primer)
-
----
-
-## 📜 License
-
-This project is open-source under the **MIT License**. Feel free to use it for learning, portfolios, or as a foundation for your own projects.
-
-**Note:** This is a student portfolio project demonstrating cybersecurity concepts. For production use, conduct thorough security audits and implement additional hardening measures.
-
----
-
-## 👤 Author
-
-**Anugrah K.**  
-AI & Cybersecurity Enthusiast  
-📧 [Email](mailto:anugrah.k910@gmail.com)  
-🔗 [GitHub Profile](https://github.com/anugrahk21)  
-💼 [LinkedIn](https://linkedin.com/in/anugrah-k)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Whether you're fixing bugs, improving documentation, or proposing new features, your help is appreciated.
-
-### How to Contribute
-
-1. **Fork the Repository**
-   ```bash
-   git clone https://github.com/yourusername/Project_Cerberus.git
-   cd Project_Cerberus
-   ```
-
-2. **Create a Feature Branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-3. **Make Your Changes**
-   - Follow the existing code style and structure
-   - Add comments to explain complex logic
-   - Update documentation if needed
-
-4. **Test Your Changes**
-   ```bash
-   # Run the server and test with curl commands
-   uvicorn app.main:app --reload
-   ```
-
-5. **Commit and Push**
-   ```bash
-   git add .
-   git commit -m "feat: add your feature description"
-   git push origin feature/your-feature-name
-   ```
-
-6. **Open a Pull Request**
-   - Describe what your changes do
-   - Reference any related issues
-   - Wait for review and feedback
-
-### Contribution Ideas
-
-- 🔒 **Security Enhancements**: Implement new judge algorithms or attack detection patterns
-- ⚡ **Performance**: Optimize judge execution speed or reduce API calls
-- 📊 **Monitoring**: Add metrics collection (Prometheus) or observability features
-- 🧪 **Testing**: Create pytest suite for automated testing
-- 📚 **Documentation**: Improve code comments, add tutorials, or create video demos
-- 🎨 **UI Dashboard**: Build a web interface to visualize attack logs
-- 🐳 **DevOps**: Add Docker support or CI/CD pipelines
-
-### Code of Conduct
-
-- Be respectful and constructive in discussions
-- Test your changes before submitting
-- Keep pull requests focused on a single feature/fix
-- Update documentation to reflect your changes
-
----
-
-## 🌟 Acknowledgments
-
-- Google for the Gemini API and excellent documentation
-- The FastAPI community for an amazing web framework
-- Simon Willison and researchers for prompt injection awareness
-- The open-source security community for attack pattern databases
-
----
-
-## 📝 Version History
-
-**v2.0** (November 2025) - Production-Ready Full-Stack Build
-- ✅ **Weighted Voting System**: Risk score algorithm with judge-specific weights (1x, 3x, 4x)
-- ✅ **Dual-Layer Rate Limiting**: Frontend localStorage + Backend IP tracking (3 prompts/24h)
-- ✅ **Live System Status**: Real-time health monitoring with auto-polling (30s interval)
-- ✅ **Modern Frontend**: Next.js 16 + Tailwind CSS 4 + Framer Motion animations
-- ✅ **Responsive UI**: Mobile-optimized chat interface with council visualization
-- ✅ **Reusable Components**: SystemStatusBadge, CursorSpotlight, custom hooks
-- ✅ **Complete 3-judge security council implementation**
-- ✅ **Context-aware session memory for multi-turn conversations**
-- ✅ **Fail-closed architecture (503 on judge failures)**
-- ✅ **XML injection prevention (HTML entity escaping)**
-- ✅ **Live canary embedding with response scanning**
-- ✅ **IP-based attack tracking with forensic logging**
-- ✅ **Minimal information leakage (sanitized errors)**
-- ✅ **Enhanced judge prompts with examples (18+ keywords)**
-- ✅ **FastAPI REST endpoints (/chat, /logs, /session/reset)**
-- ✅ **Async parallel judge execution with asyncio.gather()**
-- ✅ **Production-ready error handling (403, 429, 503)**
-- ✅ **CORS configuration for frontend integration**
-- ✅ **TypeScript type safety across frontend**
-
-**v0.1** (October 2025) - Ideation & Architecture Design
-- 📋 Project concept and PRD development
-- 📐 System architecture planning (3-judge council design)
-- 🔍 Security research (prompt injection, canary tokens, fail-closed patterns)
-- 🏗️ Technology stack selection (FastAPI, Gemini, Python asyncio)
-
 ---
 
 ## 🎨 Frontend Architecture & UI/UX
@@ -1341,6 +971,378 @@ Project Cerberus employs **multiple layers of defense** to stop malicious reques
 - 🌐 **Backend is Source of Truth**: Frontend blocks are UX enhancements, not security
 - 📊 **Transparent Logging**: All blocks recorded with timestamps, IPs, and reasons
 - ⚖️ **Smart Blocking**: Weighted voting reduces false positives while maintaining security
+
+---
+
+## 🎓 Interview Preparation: Key Talking Points
+
+### For Technical Interviews
+
+**Q: "Walk me through the architecture of this project."**
+
+*A:* "Project Cerberus is a full-stack AI security system with both a FastAPI backend and Next.js frontend. When a user sends a prompt, it goes through multiple security layers:
+
+1. **Rate Limiting (Dual-Layer)**: 
+   - Frontend tracks prompts in localStorage (3 per session)
+   - Backend enforces IP-based rolling window (3 per 24 hours)
+   - Returns HTTP 429 with retry-after countdown
+
+2. **Weighted Voting Council**: Three judges run in parallel via asyncio.gather():
+   - **Literal Judge (1x weight)**: Fast keyword matching for obvious attacks
+   - **Intent Judge (3x weight)**: AI-powered semantic analysis using Gemini Flash with prompt engineering
+   - **Canary Judge (4x weight)**: System prompt leakage detection with UUID tokens
+
+3. **Risk Score Algorithm**: Instead of unanimous voting, I calculate a weighted risk score. If the total exceeds a threshold (2), the request is blocked. This allows the Intent judge to override false positives from the Literal judge - for example, "What is hacking?" would trigger Literal (1) but Intent approves (0), resulting in score 1 < 2, so it passes.
+
+4. **Fail-Closed Architecture**: If any judge throws an exception, the system adds maximum risk (10) to guarantee blocking, returning 503 instead of allowing potentially dangerous requests through.
+
+For context-aware conversations, I maintain a session history that gets replayed in every prompt. I also embed the canary in the live system prompt and scan responses for leakage before returning to the user.
+
+The frontend is built with Next.js 16 and features:
+- Real-time system status monitoring (green/red pulse badge)
+- Live council visualization showing each judge's verdict
+- Smooth animations with Framer Motion
+- Mobile-responsive design with glassmorphic UI
+
+The system logs all blocked requests with timestamps, IP addresses, risk scores, and judge verdicts to a JSON audit trail."
+
+---
+
+**Q: "What security vulnerabilities does this protect against?"**
+
+*A:* "The system defends against multiple attack vectors:
+
+1. **Direct Prompt Injection**: The XML wrapper with HTML entity escaping prevents users from breaking out with tags like `</user_input><malicious>`.
+
+2. **System Prompt Extraction**: The dual canary system (test + live embedding) detects if attackers successfully extract hidden instructions.
+
+3. **Jailbreak Attempts**: Judge 2's semantic analysis catches DAN mode, roleplaying tricks, and social engineering that bypasses keyword filters.
+
+4. **Rate Limit Bypass Attempts**: Dual-layer enforcement:
+   - Frontend localStorage can be cleared, but backend IP tracking is the source of truth
+   - Rolling 24-hour window prevents midnight reset exploits
+   - Returns HTTP 429 with exact retry-after countdown
+
+5. **Judge Evasion**: The fail-closed architecture means if an attacker finds a way to crash a judge (e.g., via API rate limits), the system blocks the request instead of allowing it through.
+
+6. **Information Disclosure**: Generic error messages prevent attackers from learning about internal security mechanisms.
+
+7. **Reconnaissance**: IP logging enables detection of repeated attack attempts from the same source."
+
+---
+
+**Q: "Why did you choose Python and FastAPI?"**
+
+*A:* "I chose Python because it has excellent async support (asyncio) for parallel I/O operations, and the Gemini SDK is native Python. FastAPI was ideal because:
+
+1. **Native async/await**: Supports concurrent judge execution without threading complexity
+2. **Automatic validation**: Pydantic models catch malformed requests before they reach my code
+3. **OpenAPI docs**: Auto-generated API documentation at `/docs` endpoint
+4. **Performance**: Comparable to Node.js/Go for I/O-bound workloads like API calls
+5. **Type hints**: Better IDE support and fewer runtime errors
+
+For production, I'd benchmark this against FastAPI alternatives like Starlette or even rewrite critical paths in Rust with PyO3 bindings if latency becomes an issue."
+
+---
+
+**Q: "How would you scale this for 10,000 concurrent users?"**
+
+*A:* "Great question. The current implementation is a single-user demo. For production scale:
+
+**Immediate Changes:**
+1. Replace in-memory `SESSION_HISTORY` with Redis (sub-millisecond lookups, TTL support)
+2. Move attack logs to PostgreSQL with proper indexing on `timestamp` and `ip_address`
+3. Add API authentication (JWT tokens) and rate limiting (10 req/min per user)
+
+**Infrastructure:**
+1. Deploy behind a load balancer (nginx/HAProxy) with health checks
+2. Run multiple FastAPI instances (horizontal scaling)
+3. Use connection pooling for Gemini API calls
+4. Add a CDN for static assets
+
+**Observability:**
+1. Prometheus metrics (request latency, judge pass/fail rates, error rates)
+2. Structured logging with ELK stack (Elasticsearch, Logstash, Kibana)
+3. Distributed tracing with OpenTelemetry to debug slow requests
+
+**Cost Optimization:**
+1. Cache safe prompts (if they repeat, skip judge checks)
+2. Use cheaper models for judges (Gemini Flash is already cost-effective)
+3. Implement request batching for high-throughput scenarios
+
+The asyncio architecture is already scalable - the bottleneck would be the Gemini API rate limits, not my code."
+
+---
+
+**Q: "What would you improve if you had more time?"**
+
+*A:* "Several enhancements I'd prioritize:
+
+**Security:**
+1. **Adaptive Judges**: Train custom ML classifiers on collected attack logs (supervised learning)
+2. **Honeypot Responses**: Return fake data to attackers instead of blocking (catch more intel)
+3. **Dynamic Thresholds**: Adjust blocking threshold based on user reputation
+4. **Encrypted Canaries**: Use HMAC signatures instead of plaintext UUIDs
+
+**Features:**
+1. **Multi-User Sessions**: Replace in-memory storage with Redis for distributed rate limiting
+2. **Streaming Responses**: Support SSE (Server-Sent Events) for real-time AI output with token-by-token validation
+3. **Configurable Judge Weights**: Admin dashboard to tune weights based on false positive/negative rates
+4. **User Authentication**: JWT-based auth to track users across devices
+
+**Frontend Enhancements:**
+1. **Dark/Light Mode Toggle**: Theme switcher with system preference detection
+2. **Attack Visualization Dashboard**: Real-time graphs of blocked requests, judge performance metrics
+3. **Export Chat History**: Download conversations as JSON/PDF
+4. **Accessibility Improvements**: Screen reader optimization, keyboard navigation
+
+**DevOps:**
+1. **Docker Containerization**: Multi-stage builds for backend + frontend
+2. **CI/CD Pipeline**: GitHub Actions for automated testing, linting, and Vercel deployment
+3. **Integration Tests**: Playwright for E2E frontend testing, pytest for backend
+4. **Load Testing**: k6 scripts to benchmark rate limiting and judge performance under load
+5. **Monitoring**: Sentry for error tracking, Prometheus + Grafana for metrics
+
+**Code Quality:**
+1. **Type Checking**: Add mypy for stricter backend type validation
+2. **Linting**: Pre-commit hooks with black, ruff, eslint, prettier
+3. **Component Library**: Storybook for UI component documentation
+4. **Performance Optimization**: React.memo, code splitting, image optimization
+
+The current v2.0 is a production-ready demo showcasing full-stack skills, but these additions would make it enterprise-grade."
+
+---
+
+## 🛠️ Technologies Used
+
+### Backend Stack
+
+| Component               | Technology                  | Purpose                              |
+|-------------------------|-----------------------------|--------------------------------------|
+| **Backend Framework**   | FastAPI 0.104.1             | Async REST API with automatic docs   |
+| **AI Model**            | Gemini 2.5 Pro              | Main chat (high-quality responses)   |
+| **Judge Model**         | Gemini 2.5 Flash            | Security screening (fast, cheap)     |
+| **Async Runtime**       | asyncio (Python 3.10+)      | Concurrent judge execution           |
+| **Validation**          | Pydantic 2.5.0              | Request schema validation            |
+| **Server**              | Uvicorn 0.24.0 (ASGI)       | Production-grade async server        |
+| **Config Management**   | python-dotenv 1.0.0         | Environment variable loading         |
+| **XML Escaping**        | html.escape (stdlib)        | Prevent tag injection                |
+| **Unique IDs**          | uuid (stdlib)               | Canary token generation              |
+| **Logging**             | JSON (stdlib)               | Structured attack audit trail        |
+| **CORS**                | FastAPI CORSMiddleware      | Cross-origin requests for frontend   |
+
+### Frontend Stack
+
+| Component               | Technology                  | Purpose                              |
+|-------------------------|-----------------------------|--------------------------------------|
+| **Framework**           | Next.js 16.0.3              | React framework with App Router      |
+| **UI Library**          | React 19.2.0                | Component-based UI                   |
+| **Styling**             | Tailwind CSS 4              | Utility-first CSS framework          |
+| **Animations**          | Framer Motion 12.23.24      | Production-ready motion library      |
+| **Icons**               | Lucide React 0.554.0        | Beautiful & consistent icons         |
+| **HTTP Client**         | Axios 1.13.2                | Promise-based HTTP requests          |
+| **Type Safety**         | TypeScript 5                | Static type checking                 |
+| **State Management**    | React Hooks + localStorage  | Client-side persistence              |
+| **Utilities**           | clsx, tailwind-merge        | Conditional & merged className       |
+
+---
+
+## 🔐 Security Considerations
+
+### What This System Protects Against
+- ✅ Keyword-based prompt injection
+- ✅ Semantic jailbreak attempts (DAN mode, roleplay exploits)
+- ✅ System prompt extraction attacks
+- ✅ XML tag breakout attempts
+- ✅ Information disclosure via verbose errors
+- ✅ **Rate limit bypass attempts** (dual-layer enforcement)
+- ✅ **Quota exhaustion attacks** (3 prompts per 24-hour rolling window)
+- ✅ **IP-based abuse** (per-source tracking and blocking)
+- ✅ Repeated attacks from same source (via IP logging and rate limits)
+
+### What This System DOES NOT Protect Against
+- ❌ **Model-level vulnerabilities**: If Gemini itself has a zero-day exploit, judges may not catch it
+- ❌ **Novel attack patterns**: Judges are trained on known attacks; completely new techniques may bypass
+- ❌ **Physical attacks**: No protection against compromised API keys or stolen credentials
+- ❌ **Side-channel attacks**: Timing attacks or model behavior analysis not addressed
+- ❌ **Distributed attacks**: Single IP logging doesn't prevent botnets or VPN evasion (would need distributed rate limiting with Redis)
+- ❌ **API key rotation**: Attackers with multiple API keys can bypass rate limits (would need account-based tracking)
+
+### Recommendations for Production Deployment
+1. **Regular Judge Updates**: Retrain/update judge prompts monthly based on new attack research
+2. **Bug Bounty Program**: Incentivize security researchers to find bypasses
+3. **API Key Rotation**: Rotate Gemini API keys quarterly (least privilege principle)
+4. **Incident Response Plan**: Document procedures for zero-day discoveries
+5. **Penetration Testing**: Hire external red team to audit the system annually
+
+---
+
+## 🚨 Troubleshooting
+
+### Issue: "❌ GEMINI_API_KEY not found..."
+**Solution:** Create a `.env` file in the project root with your API key:
+```env
+GEMINI_API_KEY=your_actual_key_here
+VERSION=1.0
+```
+
+### Issue: "404 Not Found" when calling Gemini API
+**Solution:** Check model names. This project uses `gemini-2.5-pro` and `gemini-2.5-flash`. If Google deprecates these, run:
+```bash
+python check_models.py
+```
+Then update `app/main.py` and `app/judges.py` with the new model names.
+
+### Issue: Session history not working
+**Solution:** Ensure you're using the same FastAPI instance. Restart the server with `uvicorn --reload` if needed. Session data is lost on restart (in-memory storage).
+
+### Issue: All prompts blocked (too aggressive)
+**Solution:** This may happen if the Gemini Flash API is rate-limited or down. Check `app/judges.py` logs for errors. The system fails closed (blocks) when judges are unavailable.
+
+### Issue: API Key Leaked to GitHub
+**Solution:** 
+1. Immediately revoke the key at [Google AI Studio](https://ai.google.dev/)
+2. Generate a new API key
+3. Update `.env` with new key
+4. Google's automated scanners may already have detected and disabled the old key (sends email alert)
+5. The `.gitignore` file now prevents future leaks
+
+---
+
+## 📚 Learning Resources
+
+If you're new to these concepts, here are some recommended resources:
+
+### Prompt Injection & AI Security
+- [Simon Willison's Blog: Prompt Injection](https://simonwillison.net/series/prompt-injection/)
+- [OWASP Top 10 for LLMs](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+- [Research Paper: Prompt Injection Attacks](https://arxiv.org/abs/2302.12173)
+
+### FastAPI & Async Python
+- [FastAPI Official Tutorial](https://fastapi.tiangolo.com/tutorial/)
+- [Python asyncio Documentation](https://docs.python.org/3/library/asyncio.html)
+- [Real Python: Async IO in Python](https://realpython.com/async-io-python/)
+
+### Reverse Proxy Design
+- [nginx as a Reverse Proxy](https://www.nginx.com/resources/glossary/reverse-proxy/)
+- [System Design Primer](https://github.com/donnemartin/system-design-primer)
+
+---
+
+## � Version History
+
+**v2.0** (November 2025) - Production-Ready Full-Stack Build
+- ✅ **Weighted Voting System**: Risk score algorithm with judge-specific weights (1x, 3x, 4x)
+- ✅ **Dual-Layer Rate Limiting**: Frontend localStorage + Backend IP tracking (3 prompts/24h)
+- ✅ **Live System Status**: Real-time health monitoring with auto-polling (30s interval)
+- ✅ **Modern Frontend**: Next.js 16 + Tailwind CSS 4 + Framer Motion animations
+- ✅ **Responsive UI**: Mobile-optimized chat interface with council visualization
+- ✅ **Reusable Components**: SystemStatusBadge, CursorSpotlight, custom hooks
+- ✅ **Complete 3-judge security council implementation**
+- ✅ **Context-aware session memory for multi-turn conversations**
+- ✅ **Fail-closed architecture (503 on judge failures)**
+- ✅ **XML injection prevention (HTML entity escaping)**
+- ✅ **Live canary embedding with response scanning**
+- ✅ **IP-based attack tracking with forensic logging**
+- ✅ **Minimal information leakage (sanitized errors)**
+- ✅ **Enhanced judge prompts with examples (18+ keywords)**
+- ✅ **FastAPI REST endpoints (/chat, /logs, /session/reset)**
+- ✅ **Async parallel judge execution with asyncio.gather()**
+- ✅ **Production-ready error handling (403, 429, 503)**
+- ✅ **CORS configuration for frontend integration**
+- ✅ **TypeScript type safety across frontend**
+
+**v0.1** (October 2025) - Ideation & Architecture Design
+- 📋 Project concept and PRD development
+- 📐 System architecture planning (3-judge council design)
+- 🔍 Security research (prompt injection, canary tokens, fail-closed patterns)
+- 🏗️ Technology stack selection (FastAPI, Gemini, Python asyncio)
+
+---
+
+## �📜 License
+
+This project is open-source under the **MIT License**. Feel free to use it for learning, portfolios, or as a foundation for your own projects.
+
+**Note:** This is a student portfolio project demonstrating cybersecurity concepts. For production use, conduct thorough security audits and implement additional hardening measures.
+
+---
+
+## 👤 Author
+
+**Anugrah K.**  
+AI & Cybersecurity Enthusiast  
+📧 [Email](mailto:anugrah.k910@gmail.com)  
+🔗 [GitHub Profile](https://github.com/anugrahk21)  
+💼 [LinkedIn](https://linkedin.com/in/anugrah-k)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Whether you're fixing bugs, improving documentation, or proposing new features, your help is appreciated.
+
+### How to Contribute
+
+1. **Fork the Repository**
+   ```bash
+   git clone https://github.com/yourusername/Project_Cerberus.git
+   cd Project_Cerberus
+   ```
+
+2. **Create a Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make Your Changes**
+   - Follow the existing code style and structure
+   - Add comments to explain complex logic
+   - Update documentation if needed
+
+4. **Test Your Changes**
+   ```bash
+   # Run the server and test with curl commands
+   uvicorn app.main:app --reload
+   ```
+
+5. **Commit and Push**
+   ```bash
+   git add .
+   git commit -m "feat: add your feature description"
+   git push origin feature/your-feature-name
+   ```
+
+6. **Open a Pull Request**
+   - Describe what your changes do
+   - Reference any related issues
+   - Wait for review and feedback
+
+### Contribution Ideas
+
+- 🔒 **Security Enhancements**: Implement new judge algorithms or attack detection patterns
+- ⚡ **Performance**: Optimize judge execution speed or reduce API calls
+- 📊 **Monitoring**: Add metrics collection (Prometheus) or observability features
+- 🧪 **Testing**: Create pytest suite for automated testing
+- 📚 **Documentation**: Improve code comments, add tutorials, or create video demos
+- 🎨 **UI Dashboard**: Build a web interface to visualize attack logs
+- 🐳 **DevOps**: Add Docker support or CI/CD pipelines
+
+### Code of Conduct
+
+- Be respectful and constructive in discussions
+- Test your changes before submitting
+- Keep pull requests focused on a single feature/fix
+- Update documentation to reflect your changes
+
+---
+
+## 🌟 Acknowledgments
+
+- Google for the Gemini API and excellent documentation
+- The FastAPI community for an amazing web framework
+- Simon Willison and researchers for prompt injection awareness
+- The open-source security community for attack pattern databases
 
 ---
 
