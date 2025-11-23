@@ -56,7 +56,7 @@ export default function BentoGrid() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[200px]">
           {/* Card 1: Parallel Execution (2x2) */}
           <BentoCard
-            className="md:col-span-2 md:row-span-2"
+            className="row-span-2 md:col-span-2 md:row-span-2"
             title="Parallel Execution"
             description="Asyncio.gather() runs 3 judges concurrently. Latency < 300ms."
             delay={0.1}

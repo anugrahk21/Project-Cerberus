@@ -13,7 +13,7 @@ export default function Spotlight({ className, color = "255,255,255" }: Spotligh
         className
       )}
     >
-      <div className="relative w-[75vw] max-w-[1200px] aspect-square">
+      <div className="relative w-[150vw] max-w-none sm:w-[75vw] sm:max-w-[1200px] aspect-square">
         <div
           className="absolute inset-0 rounded-full blur-[140px] opacity-60 animate-corePulse"
           style={{
