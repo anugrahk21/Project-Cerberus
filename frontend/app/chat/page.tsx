@@ -197,23 +197,31 @@ export default function ChatPage() {
                 key={judge.id}
                 className={`relative overflow-hidden rounded-xl border p-4 transition-all duration-500 ${
                   judge.status === "analyzing" ? "border-white/40 bg-white/5" :
-                  judge.status === "safe" ? "border-white/20 bg-white/5" :
-                  judge.status === "unsafe" ? "border-white bg-white/10" :
+                  judge.status === "safe" ? "border-green-500/30 bg-green-500/10" :
+                  judge.status === "unsafe" ? "border-red-500/50 bg-red-500/10" :
                   "border-white/5 bg-transparent"
                 }`}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className={`p-2 rounded-lg ${
                     judge.status === "analyzing" ? "bg-white/10 text-white" :
-                    judge.status === "safe" ? "bg-white/10 text-zinc-300" :
-                    judge.status === "unsafe" ? "bg-white text-black" :
+                    judge.status === "safe" ? "bg-green-500/20 text-green-400" :
+                    judge.status === "unsafe" ? "bg-red-500/20 text-red-400" :
                     "bg-zinc-900 text-zinc-600"
                   }`}>
                     <judge.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className={`font-bold text-sm ${judge.status === 'unsafe' ? 'text-white' : 'text-zinc-300'}`}>{judge.name}</div>
-                    <div className="text-[10px] font-mono text-zinc-500 uppercase">{judge.status}</div>
+                    <div className={`font-bold text-sm ${
+                      judge.status === 'unsafe' ? 'text-red-400' : 
+                      judge.status === 'safe' ? 'text-green-400' :
+                      'text-zinc-300'
+                    }`}>{judge.name}</div>
+                    <div className={`text-[10px] font-mono uppercase ${
+                      judge.status === 'unsafe' ? 'text-red-500/70' : 
+                      judge.status === 'safe' ? 'text-green-500/70' :
+                      'text-zinc-500'
+                    }`}>{judge.status}</div>
                   </div>
                 </div>
                 
@@ -228,26 +236,32 @@ export default function ChatPage() {
           {/* Final Verdict */}
           <div className={`p-4 rounded-xl border transition-all duration-500 ${
             isLoading ? "bg-zinc-900/50 border-white/10" :
-            judges.some(j => j.status === "unsafe") ? "bg-white text-black border-white" :
-            judges.some(j => j.status === "safe") ? "bg-zinc-900/50 border-white/20" :
+            judges.some(j => j.status === "unsafe") ? "bg-red-950/30 border-red-500/50" :
+            judges.some(j => j.status === "safe") ? "bg-green-950/30 border-green-500/50" :
             "bg-zinc-900/30 border-white/5"
           }`}>
             <div className="flex items-center justify-between mb-3">
               <span className={`text-xs font-mono tracking-wider ${
-                judges.some(j => j.status === "unsafe") ? "text-black/70" : "text-zinc-500"
+                judges.some(j => j.status === "unsafe") ? "text-red-400" : 
+                judges.some(j => j.status === "safe") ? "text-green-400" :
+                "text-zinc-500"
               }`}>FINAL VERDICT</span>
               {judges.some(j => j.status === "unsafe") ? (
-                <ShieldAlert className="w-4 h-4" />
+                <ShieldAlert className="w-4 h-4 text-red-500" />
               ) : (
                 <ShieldCheck className={`w-4 h-4 ${
-                  judges.some(j => j.status === "safe") ? "text-white" : "text-zinc-600"
+                  judges.some(j => j.status === "safe") ? "text-green-500" : "text-zinc-600"
                 }`} />
               )}
             </div>
             
-            <div className="text-xl font-bold tracking-tight">
+            <div className={`text-xl font-bold tracking-tight ${
+               judges.some(j => j.status === "unsafe") ? "text-red-500" : 
+               judges.some(j => j.status === "safe") ? "text-green-500" :
+               "text-white"
+            }`}>
               {isLoading ? (
-                <span className="animate-pulse">ANALYZING...</span>
+                <span className="animate-pulse text-white">ANALYZING...</span>
               ) : judges.some(j => j.status === "unsafe") ? (
                 "ACCESS DENIED"
               ) : judges.some(j => j.status === "safe") ? (
