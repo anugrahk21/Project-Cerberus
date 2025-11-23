@@ -11,12 +11,22 @@ export interface ChatResponse {
   success: boolean;
   response: string;
   security_check: string;
+  verdict: {
+    literal: "safe" | "unsafe" | "error";
+    intent: "safe" | "unsafe" | "error";
+    canary: "safe" | "unsafe" | "error";
+  };
 }
 
 export interface ChatError {
   detail: {
     error: string;
     message: string;
+    verdict?: {
+      literal: "safe" | "unsafe" | "error";
+      intent: "safe" | "unsafe" | "error";
+      canary: "safe" | "unsafe" | "error";
+    };
   };
 }
 

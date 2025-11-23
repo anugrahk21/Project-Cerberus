@@ -198,7 +198,7 @@ Now respond to this user query:
         raise RuntimeError("Judge 3 (Canary) unavailable") from e
 
 
-async def check_safety(prompt: str) -> Tuple[bool, str, str]:
+async def check_safety(prompt: str) -> Tuple[bool, str, str, bool, dict]:
     """
     The Council Decision: Run all 3 judges in parallel and aggregate results.
     ---------------------------------------------------------------------------
@@ -218,11 +218,12 @@ async def check_safety(prompt: str) -> Tuple[bool, str, str]:
         prompt (str): The user's input to analyze
         
     Returns:
-        Tuple[bool, str, str, bool]: 
+        Tuple[bool, str, str, bool, dict]: 
             - is_safe (bool): True if all judges approved, False if any rejected
             - reason (str): Human-readable explanation of the decision
             - canary (str): The canary token used (for logging purposes)
             - had_internal_error (bool): True if any judge experienced an internal failure
+            - verdict (dict): Detailed breakdown of each judge's decision
     """
     print(f"\n🔍 Analyzing prompt: '{prompt[:50]}...'")
     
@@ -235,9 +236,9 @@ async def check_safety(prompt: str) -> Tuple[bool, str, str]:
     print("⚖️ Convening the Council of Judges...")
     
     judge_tasks = [
-        ("Literal (banned keywords)", judge_literal(prompt)),
-        ("Intent (malicious pattern)", judge_intent(prompt)),
-        ("Canary (prompt leakage)", judge_canary(prompt, canary)),
+        ("literal", judge_literal(prompt)),
+        ("intent", judge_intent(prompt)),
+        ("canary", judge_canary(prompt, canary)),
     ]
 
     results = await asyncio.gather(
@@ -248,16 +249,21 @@ async def check_safety(prompt: str) -> Tuple[bool, str, str]:
     is_safe = True
     failed_judges = []
     had_internal_error = False
+    verdict = {}
 
-    for (label, _), outcome in zip(judge_tasks, results):
+    for (key, _), outcome in zip(judge_tasks, results):
         if isinstance(outcome, Exception):
             had_internal_error = True
             is_safe = False
-            failed_judges.append(f"{label} - internal error")
-            print(f"⚠️ {label}: internal error -> {outcome}")
+            failed_judges.append(f"{key} - internal error")
+            verdict[key] = "error"
+            print(f"⚠️ {key}: internal error -> {outcome}")
         elif outcome is False:
             is_safe = False
-            failed_judges.append(label)
+            failed_judges.append(key)
+            verdict[key] = "unsafe"
+        else:
+            verdict[key] = "safe"
 
     if is_safe:
         reason = "All security checks passed - request approved"
@@ -266,4 +272,4 @@ async def check_safety(prompt: str) -> Tuple[bool, str, str]:
         reason = f"Security violation detected by: {', '.join(failed_judges)}"
         print(f"❌ VERDICT: UNSAFE - {reason}")
     
-    return is_safe, reason, canary, had_internal_error
+    return is_safe, reason, canary, had_internal_error, verdict

@@ -223,7 +223,7 @@ async def chat(payload: ChatRequest, http_request: Request):
     print(f"{'='*60}")
     
     try:
-        is_safe, reason, canary, had_internal_error = await check_safety(user_prompt)
+        is_safe, reason, canary, had_internal_error, verdict = await check_safety(user_prompt)
         
         # STEP 2: Handle Unsafe Prompts
         if not is_safe:
@@ -241,7 +241,8 @@ async def chat(payload: ChatRequest, http_request: Request):
                 status_code=status_code,
                 detail={
                     "error": "Request blocked by security system",
-                    "message": user_message
+                    "message": user_message,
+                    "verdict": verdict
                 }
             )
         
@@ -258,11 +259,14 @@ async def chat(payload: ChatRequest, http_request: Request):
         if canary in ai_response:
             leak_reason = "Model response leaked canary token"
             log_attack(user_prompt, leak_reason, canary, client_ip)
+            # Update verdict to reflect canary failure in output
+            verdict["canary"] = "unsafe"
             raise HTTPException(
                 status_code=500,
                 detail={
                     "error": "Response blocked by security system",
-                    "message": "The assistant detected a security violation while generating the answer."
+                    "message": "The assistant detected a security violation while generating the answer.",
+                    "verdict": verdict
                 }
             )
         
@@ -279,13 +283,16 @@ async def chat(payload: ChatRequest, http_request: Request):
             content={
                 "success": True,
                 "response": ai_response,
-                "security_check": "passed"
+                "security_check": "passed",
+                "verdict": verdict
             }
         )
         
-    except HTTPException:
-        # Re-raise HTTP exceptions (like our 403 above)
-        raise
+    except HTTPException as e:
+        # If it's our 403/503, we want to pass the verdict details if available
+        # But HTTPException detail is usually just a dict.
+        # We need to refactor check_safety to return the detailed breakdown first.
+        raise e
     
     except Exception as e:
         # Catch any unexpected errors (API failures, network issues, etc.)

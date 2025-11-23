@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, Brain, Search, Eye, ArrowLeft } from "lucide-react";
+import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, Brain, Search, Eye, ArrowLeft, ShieldAlert } from "lucide-react";
 import { sendChat, ChatResponse, ChatError } from "@/lib/api";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 
@@ -56,17 +56,37 @@ export default function ChatPage() {
     try {
       const data = await sendChat(userPrompt);
       
-      // Simulate processing delay for visual effect if response is too fast
-      // In a real app, you might stream this status from the backend
-      setJudges((prev) => prev.map((j) => ({ ...j, status: "safe", verdict: "PASSED" })));
+      // Update judges based on the actual backend response
+      if (data.verdict) {
+        setJudges((prev) => prev.map((j) => {
+          let status: JudgeStatus = "idle";
+          if (j.id === 1) status = data.verdict.literal === "safe" ? "safe" : "unsafe";
+          if (j.id === 2) status = data.verdict.intent === "safe" ? "safe" : "unsafe";
+          if (j.id === 3) status = data.verdict.canary === "safe" ? "safe" : "unsafe";
+          return { ...j, status };
+        }));
+      } else if (data.security_check === "passed") {
+        setJudges((prev) => prev.map((j) => ({ ...j, status: "safe", verdict: "PASSED" })));
+      }
       
       setMessages((prev) => [...prev, { role: "ai", content: data.response }]);
     } catch (error: any) {
       console.error("Chat error:", error);
       
-      // If it's a security block (403), show red judges
-      if (error.detail?.error === "Request blocked by security system") {
-         setJudges((prev) => prev.map((j) => ({ ...j, status: "unsafe", verdict: "BLOCKED" })));
+      // If it's a security block (403), show red judges based on verdict if available
+      if (error.detail?.error === "Request blocked by security system" || error.detail?.error === "Response blocked by security system") {
+         if (error.detail.verdict) {
+            setJudges((prev) => prev.map((j) => {
+              let status: JudgeStatus = "idle";
+              if (j.id === 1) status = error.detail.verdict.literal === "safe" ? "safe" : "unsafe";
+              if (j.id === 2) status = error.detail.verdict.intent === "safe" ? "safe" : "unsafe";
+              if (j.id === 3) status = error.detail.verdict.canary === "safe" ? "safe" : "unsafe";
+              return { ...j, status };
+            }));
+         } else {
+            // Fallback if no detailed verdict
+            setJudges((prev) => prev.map((j) => ({ ...j, status: "unsafe", verdict: "BLOCKED" })));
+         }
          setMessages((prev) => [...prev, { role: "ai", content: error.detail.message, isError: true }]);
       } else {
          // Generic error
@@ -205,15 +225,37 @@ export default function ChatPage() {
             ))}
           </div>
 
-          <div className="p-4 rounded-xl bg-zinc-900/50 border border-white/5">
-            <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono mb-2">
-              <Lock className="w-3 h-3" />
-              <span>ENCRYPTION</span>
+          {/* Final Verdict */}
+          <div className={`p-4 rounded-xl border transition-all duration-500 ${
+            isLoading ? "bg-zinc-900/50 border-white/10" :
+            judges.some(j => j.status === "unsafe") ? "bg-white text-black border-white" :
+            judges.some(j => j.status === "safe") ? "bg-zinc-900/50 border-white/20" :
+            "bg-zinc-900/30 border-white/5"
+          }`}>
+            <div className="flex items-center justify-between mb-3">
+              <span className={`text-xs font-mono tracking-wider ${
+                judges.some(j => j.status === "unsafe") ? "text-black/70" : "text-zinc-500"
+              }`}>FINAL VERDICT</span>
+              {judges.some(j => j.status === "unsafe") ? (
+                <ShieldAlert className="w-4 h-4" />
+              ) : (
+                <ShieldCheck className={`w-4 h-4 ${
+                  judges.some(j => j.status === "safe") ? "text-white" : "text-zinc-600"
+                }`} />
+              )}
             </div>
-            <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
-              <div className="h-full bg-white w-full animate-pulse" />
+            
+            <div className="text-xl font-bold tracking-tight">
+              {isLoading ? (
+                <span className="animate-pulse">ANALYZING...</span>
+              ) : judges.some(j => j.status === "unsafe") ? (
+                "ACCESS DENIED"
+              ) : judges.some(j => j.status === "safe") ? (
+                "ACCESS GRANTED"
+              ) : (
+                "AWAITING INPUT"
+              )}
             </div>
-            <div className="mt-2 text-[10px] text-zinc-600 text-right">AES-256-GCM</div>
           </div>
         </aside>
       </div>
