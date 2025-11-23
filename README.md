@@ -681,9 +681,6 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
-<p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
-
----
 ## 🎨 Frontend Architecture & UI/UX
 
 ### Modern Tech Stack
