@@ -1,6 +1,6 @@
 """
 Project Cerberus: The AI Iron Dome
-Version: 1.0
+Version: 2.0
 ----------------------------------
 Author: Anugrah K.
 Role: Backend Logic & Security Architecture
@@ -11,7 +11,8 @@ Note: Built for AI Cybersecurity Research Portfolio.
 
 import json
 import os
-from datetime import datetime
+from collections import defaultdict
+from datetime import datetime, timedelta
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -27,6 +28,9 @@ from app.utils import wrap_prompt
 # Session State (single active session for student demo)
 # ------------------------------------------------------------
 SESSION_HISTORY: list[dict[str, str]] = []  # Stores alternating user/assistant turns
+RATE_LIMIT_MAX_REQUESTS = int(os.getenv("CERBERUS_MAX_CHATS", "3"))
+RATE_LIMIT_WINDOW_MINUTES = int(os.getenv("CERBERUS_CHAT_WINDOW_MINUTES", "1440"))
+REQUEST_COUNTERS: dict[str, list[datetime]] = defaultdict(list)
 
 
 def reset_session_history() -> None:
@@ -37,6 +41,34 @@ def reset_session_history() -> None:
 def append_history(role: str, content: str) -> None:
     """Appends a message to the session history."""
     SESSION_HISTORY.append({"role": role, "content": content})
+
+
+def _prune_request_history(ip: str, now: datetime) -> list[datetime]:
+    """Removes expired entries from the request history for an IP."""
+    window_start = now - timedelta(minutes=RATE_LIMIT_WINDOW_MINUTES)
+    history = [ts for ts in REQUEST_COUNTERS[ip] if ts >= window_start]
+    REQUEST_COUNTERS[ip] = history
+    return history
+
+
+def check_rate_limit(ip: str) -> tuple[bool, int | None]:
+    """Returns True if the IP exceeded the quota along with retry-after seconds."""
+    now = datetime.utcnow()
+    history = _prune_request_history(ip, now)
+    if len(history) >= RATE_LIMIT_MAX_REQUESTS:
+        earliest = min(history)
+        retry_after_seconds = int(
+            (earliest + timedelta(minutes=RATE_LIMIT_WINDOW_MINUTES) - now).total_seconds()
+        )
+        return True, max(retry_after_seconds, 0)
+    return False, RATE_LIMIT_MAX_REQUESTS - len(history)
+
+
+def record_request(ip: str) -> None:
+    """Stores the timestamp of a new request for an IP."""
+    now = datetime.utcnow()
+    _prune_request_history(ip, now)
+    REQUEST_COUNTERS[ip].append(now)
 
 # Initialize FastAPI application
 app = FastAPI(
@@ -221,6 +253,20 @@ async def chat(payload: ChatRequest, http_request: Request):
     user_prompt = payload.prompt
     client_ip = http_request.client.host if http_request.client else "unknown"
     
+    # STEP 0: Basic rate limiting before any heavy processing
+    rate_limited, retry_after_or_remaining = check_rate_limit(client_ip)
+    if rate_limited:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "error": "rate_limit",
+                "message": "Cerberus spotted some clever (and thirsty) probing.\nCaught you!",
+                "retry_after": retry_after_or_remaining
+            }
+        )
+
+    record_request(client_ip)
+
     # STEP 1: Security Screening
     # Run the prompt through all three judges
     print(f"\n{'='*60}")

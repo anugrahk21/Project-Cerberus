@@ -50,7 +50,7 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 
 ---
 
-## �🚀 What's New in v1.0 (Enhanced Security Build)
+## 🚀 What's New in v2.0 (Enhanced Security Build)
 
 ### 🔐 Major Security Enhancements
 
@@ -865,7 +865,7 @@ Contributions are welcome! Whether you're fixing bugs, improving documentation, 
 
 ## 📝 Version History
 
-**v1.0** (November 2025) - Foundation & Backend Build
+**v2.0** (November 2025) - Enhanced Security Build
 - ✅ Complete 3-judge security council implementation
 - ✅ Context-aware session memory for multi-turn conversations
 - ✅ Fail-closed architecture (503 on judge failures)

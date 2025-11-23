@@ -1,6 +1,6 @@
 """
 Project Cerberus: The AI Iron Dome
-Version: 1.0
+Version: 2.0
 ----------------------------------
 Author: Anugrah K.
 Role: Backend Logic & Security Architecture

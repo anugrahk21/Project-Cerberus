@@ -1,3 +1,14 @@
+/*
+Project Cerberus: The AI Iron Dome
+Version: 2.0
+----------------------------------
+Author: Anugrah K.
+Role: Frontend Architecture & UI/UX
+Description: API Client - Handles communication with the FastAPI backend.
+             Includes type definitions for chat responses and error handling.
+Note: Built for AI Cybersecurity Research Portfolio.
+*/
+
 import axios from 'axios';
 
 const api = axios.create({
@@ -22,6 +33,7 @@ export interface ChatError {
   detail: {
     error: string;
     message: string;
+    retry_after?: number;
     verdict?: {
       literal: "safe" | "unsafe" | "error";
       intent: "safe" | "unsafe" | "error";

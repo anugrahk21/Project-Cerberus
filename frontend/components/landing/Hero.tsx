@@ -1,3 +1,14 @@
+/*
+Project Cerberus: The AI Iron Dome
+Version: 2.0
+----------------------------------
+Author: Anugrah K.
+Role: Frontend Architecture & UI/UX
+Description: Hero Section - The main visual hook of the landing page.
+             Features animated shield effects and the primary call-to-action.
+Note: Built for AI Cybersecurity Research Portfolio.
+*/
+
 "use client";
 
 import { motion } from "framer-motion";

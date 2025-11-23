@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, Zap, Lock, Globe, Cpu, Activity, Fingerprint, Code, Brain, EyeOff, FileText } from "lucide-react";
+import { Shield, Zap, Lock, Globe, Cpu, Activity, Fingerprint, Code, Brain, EyeOff, FileText, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BentoCard = ({
@@ -54,27 +54,39 @@ export default function BentoGrid() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[200px]">
-          {/* Card 1: Parallel Execution (2x2) */}
+          {/* Card 1: Weighted Council (2x2) */}
           <BentoCard
             className="row-span-2 md:col-span-2 md:row-span-2"
-            title="Parallel Execution"
-            description="Asyncio.gather() runs 3 judges concurrently. Latency < 300ms."
+            title="Weighted Council"
+            description="Three specialized judges vote with different weights to deliver a balanced verdict."
             delay={0.1}
           >
-            <div className="h-full flex items-end pb-4 gap-2">
-              <div className="w-full bg-zinc-900/50 rounded-lg p-4 relative overflow-hidden h-full border border-white/5">
-                <div className="absolute inset-0 flex items-end justify-around p-4">
-                  {/* Sequential Bar */}
-                  <div className="w-1/3 bg-zinc-800 h-[80%] rounded-t-md relative group-hover:h-[40%] transition-all duration-1000 border-t border-white/20">
-                    <div className="absolute bottom-2 left-0 right-0 text-center text-[10px] text-zinc-500 font-mono">SEQ</div>
+            <div className="h-full flex flex-col justify-center gap-4">
+              <div className="text-[11px] font-mono text-zinc-500 tracking-[0.4em]">JUDGE MATRIX</div>
+              <div className="bg-zinc-900/40 border border-white/5 rounded-3xl p-4 flex flex-col gap-3">
+                <div className="flex items-center justify-between text-sm text-white/80">
+                  <div className="flex items-center gap-2">
+                    <Search className="w-4 h-4 text-zinc-400" />
+                    <span className="font-mono text-xs">Literal</span>
                   </div>
-                  {/* Parallel Bar */}
-                  <div className="w-1/3 bg-white/20 h-[30%] rounded-t-md relative group-hover:h-[20%] transition-all duration-1000 border-t border-white/40">
-                    <div className="absolute bottom-2 left-0 right-0 text-center text-[10px] text-white font-mono">PAR</div>
-                  </div>
+                  <span className="text-zinc-500">1x</span>
                 </div>
-                <div className="absolute top-4 left-4 text-[10px] font-mono text-zinc-500">LATENCY_METRICS</div>
+                <div className="flex items-center justify-between text-sm text-white/80">
+                  <div className="flex items-center gap-2">
+                    <Brain className="w-4 h-4 text-white" />
+                    <span className="font-mono text-xs">Intent</span>
+                  </div>
+                  <span className="text-zinc-300">3x</span>
+                </div>
+                <div className="flex items-center justify-between text-sm text-white/80">
+                  <div className="flex items-center gap-2">
+                    <EyeOff className="w-4 h-4 text-red-400" />
+                    <span className="font-mono text-xs">Canary</span>
+                  </div>
+                  <span className="text-red-400">4x</span>
+                </div>
               </div>
+              <div className="text-[11px] font-mono text-green-400 text-right">Decision = Weighted Majority</div>
             </div>
           </BentoCard>
 

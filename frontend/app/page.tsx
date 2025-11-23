@@ -1,3 +1,14 @@
+/*
+Project Cerberus: The AI Iron Dome
+Version: 2.0
+----------------------------------
+Author: Anugrah K.
+Role: Frontend Architecture & UI/UX
+Description: The Landing Page - Entry point for the application.
+             Showcases the project features, pipeline visualization, and Bento grid.
+Note: Built for AI Cybersecurity Research Portfolio.
+*/
+
 "use client";
 
 import Link from "next/link";
@@ -8,6 +19,7 @@ import PipelineVis from "@/components/landing/PipelineVis";
 import BentoGrid from "@/components/landing/BentoGrid";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import BreathingText from "@/components/landing/BreathingText";
+import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
 
 export default function Home() {
   return (
@@ -21,9 +33,8 @@ export default function Home() {
         
         <div className="z-10 text-center max-w-5xl px-6 space-y-8">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span className="text-xs font-mono text-zinc-400 tracking-wider">SYSTEM_ONLINE // V2.0.0</span>
+            <div className="flex justify-center mb-6">
+              <SystemStatusBadge suffix=" // V2.0.0" />
             </div>
             
             <h1 className="text-5xl md:text-8xl font-bold tracking-tighter font-sans">
@@ -83,6 +94,15 @@ export default function Home() {
 
       {/* 3. Bento Grid Features */}
       <BentoGrid />
+
+      <div className="flex justify-center py-12">
+        <Link href="https://github.com/anugrahk21/Project-Cerberus" target="_blank" rel="noopener noreferrer">
+          <button className="px-8 py-4 rounded-full border border-white/20 text-zinc-400 hover:text-white hover:border-white/50 transition-all flex items-center gap-2">
+            <span>KNOW MORE?</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </Link>
+      </div>
 
       {/* 4. Footer */}
       <footer className="py-10 border-t border-white/10 bg-black">
