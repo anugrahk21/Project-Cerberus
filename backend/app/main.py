@@ -137,7 +137,9 @@ def log_attack(prompt: str, reason: str, canary: str, client_ip: str | None = No
         canary (str): The canary token used in this request
     """
     # Define the log file path
-    log_file = Path("logs/attacks.json")
+    log_dir = Path("logs")
+    log_dir.mkdir(exist_ok=True)
+    log_file = log_dir / "attacks.json"
     
     # Create the log entry with all relevant metadata
     log_entry = {
