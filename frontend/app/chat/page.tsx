@@ -43,7 +43,7 @@ export default function ChatPage() {
   const [messageCount, setMessageCount] = useState(0);
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [limitMessage, setLimitMessage] = useState("You\'ve used all free prompts for today. Cerberus needs to recharge.");
-  
+
   // Council State
   const [judges, setJudges] = useState<JudgeState[]>([
     { id: 1, name: "Literal Judge", icon: Search, status: "idle" },
@@ -54,6 +54,7 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const councilRef = useRef<HTMLElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const hasReachedLimit = messageCount >= FREE_CHAT_LIMIT;
   const remainingPrompts = Math.max(FREE_CHAT_LIMIT - messageCount, 0);
 
@@ -75,7 +76,12 @@ export default function ChatPage() {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
   useEffect(() => {
@@ -111,12 +117,17 @@ export default function ChatPage() {
     return () => observer.disconnect();
   }, []);
 
+  // Force window to top on mobile load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     if (!isStatusLoading && messages.length === 0) {
-      setMessages([{ 
-        role: "ai", 
-        content: isSystemOnline 
-          ? "System initialized. Cerberus is active. How can I assist you safely?" 
+      setMessages([{
+        role: "ai",
+        content: isSystemOnline
+          ? "System initialized. Cerberus is active. How can I assist you safely?"
           : "System unreachable. The backend server appears to be offline. Please check your connection.",
         isError: !isSystemOnline
       }]);
@@ -142,7 +153,7 @@ export default function ChatPage() {
 
     try {
       const data = await sendChat(userPrompt);
-      
+
       // Update judges based on the actual backend response
       if (data.verdict) {
         setJudges((prev) => prev.map((j) => {
@@ -155,43 +166,43 @@ export default function ChatPage() {
       } else if (data.security_check === "passed") {
         setJudges((prev) => prev.map((j) => ({ ...j, status: "safe", verdict: "PASSED" })));
       }
-      
+
       setMessages((prev) => [...prev, { role: "ai", content: data.response }]);
     } catch (error: any) {
       console.error("Chat error:", error);
-      
+
       if (error.detail?.error === "rate_limit") {
-         const retryAfterSeconds = error.detail?.retry_after;
-         const etaMinutes = retryAfterSeconds ? Math.ceil(retryAfterSeconds / 60) : null;
-         const eta = etaMinutes
-           ? `\nTry again in about ${etaMinutes} minute${etaMinutes === 1 ? "" : "s"}.`
-           : "";
-         const modalMessage = `${error.detail.message}${eta}`;
-         setLimitMessage(modalMessage);
-         setShowLimitModal(true);
-         setMessageCount(FREE_CHAT_LIMIT);
-         persistMessageCount(FREE_CHAT_LIMIT);
-         setMessages((prev) => [...prev, { role: "ai", content: error.detail.message, isError: true }]);
-         setJudges((prev) => prev.map((j) => ({ ...j, status: "idle" })));
-      // If it's a security block (403), show red judges based on verdict if available
+        const retryAfterSeconds = error.detail?.retry_after;
+        const etaMinutes = retryAfterSeconds ? Math.ceil(retryAfterSeconds / 60) : null;
+        const eta = etaMinutes
+          ? `\nTry again in about ${etaMinutes} minute${etaMinutes === 1 ? "" : "s"}.`
+          : "";
+        const modalMessage = `${error.detail.message}${eta}`;
+        setLimitMessage(modalMessage);
+        setShowLimitModal(true);
+        setMessageCount(FREE_CHAT_LIMIT);
+        persistMessageCount(FREE_CHAT_LIMIT);
+        setMessages((prev) => [...prev, { role: "ai", content: error.detail.message, isError: true }]);
+        setJudges((prev) => prev.map((j) => ({ ...j, status: "idle" })));
+        // If it's a security block (403), show red judges based on verdict if available
       } else if (error.detail?.error === "Request blocked by security system" || error.detail?.error === "Response blocked by security system") {
-         if (error.detail.verdict) {
-            setJudges((prev) => prev.map((j) => {
-              let status: JudgeStatus = "idle";
-              if (j.id === 1) status = error.detail.verdict.literal === "safe" ? "safe" : "unsafe";
-              if (j.id === 2) status = error.detail.verdict.intent === "safe" ? "safe" : "unsafe";
-              if (j.id === 3) status = error.detail.verdict.canary === "safe" ? "safe" : "unsafe";
-              return { ...j, status };
-            }));
-         } else {
-            // Fallback if no detailed verdict
-            setJudges((prev) => prev.map((j) => ({ ...j, status: "unsafe", verdict: "BLOCKED" })));
-         }
-         setMessages((prev) => [...prev, { role: "ai", content: error.detail.message, isError: true }]);
+        if (error.detail.verdict) {
+          setJudges((prev) => prev.map((j) => {
+            let status: JudgeStatus = "idle";
+            if (j.id === 1) status = error.detail.verdict.literal === "safe" ? "safe" : "unsafe";
+            if (j.id === 2) status = error.detail.verdict.intent === "safe" ? "safe" : "unsafe";
+            if (j.id === 3) status = error.detail.verdict.canary === "safe" ? "safe" : "unsafe";
+            return { ...j, status };
+          }));
+        } else {
+          // Fallback if no detailed verdict
+          setJudges((prev) => prev.map((j) => ({ ...j, status: "unsafe", verdict: "BLOCKED" })));
+        }
+        setMessages((prev) => [...prev, { role: "ai", content: error.detail.message, isError: true }]);
       } else {
-         // Generic error
-         setJudges((prev) => prev.map((j) => ({ ...j, status: "idle" })));
-         setMessages((prev) => [...prev, { role: "ai", content: "An unexpected error occurred.", isError: true }]);
+        // Generic error
+        setJudges((prev) => prev.map((j) => ({ ...j, status: "idle" })));
+        setMessages((prev) => [...prev, { role: "ai", content: "An unexpected error occurred.", isError: true }]);
       }
     } finally {
       setIsLoading(false);
@@ -201,7 +212,7 @@ export default function ChatPage() {
   return (
     <div className="lg:h-screen min-h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 lg:overflow-hidden">
       <CursorSpotlight />
-      
+
       {/* Background Grid */}
       <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none z-0" />
 
@@ -221,7 +232,7 @@ export default function ChatPage() {
       <div className="flex flex-col lg:flex-row lg:overflow-hidden z-10 lg:flex-1">
         {/* Main Chat Area */}
         <main className="w-full flex flex-col relative h-[calc(100dvh-64px)] lg:flex-1 lg:h-auto lg:min-h-0 overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
             {messages.map((msg, i) => (
               <motion.div
                 key={i}
@@ -230,13 +241,12 @@ export default function ChatPage() {
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[80%] p-5 rounded-2xl backdrop-blur-md ${
-                    msg.role === "user"
+                  className={`max-w-[80%] p-5 rounded-2xl backdrop-blur-md ${msg.role === "user"
                       ? "bg-white text-black border border-white/20 rounded-tr-none"
-                      : msg.isError 
+                      : msg.isError
                         ? "bg-zinc-900 border border-white/20 text-white rounded-tl-none"
                         : "bg-zinc-900/50 border border-white/10 text-zinc-300 rounded-tl-none"
-                  }`}
+                    }`}
                 >
                   {msg.isError && <AlertTriangle className="w-5 h-5 mb-2 text-white" />}
                   <p className="leading-relaxed font-mono text-sm">{msg.content}</p>
@@ -244,13 +254,13 @@ export default function ChatPage() {
               </motion.div>
             ))}
             {isLoading && (
-               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                 <div className="bg-zinc-900/50 border border-white/10 p-4 rounded-2xl rounded-tl-none flex gap-2 items-center">
-                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
-                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-100" />
-                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-200" />
-                 </div>
-               </motion.div>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                <div className="bg-zinc-900/50 border border-white/10 p-4 rounded-2xl rounded-tl-none flex gap-2 items-center">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-100" />
+                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-200" />
+                </div>
+              </motion.div>
             )}
             <div ref={messagesEndRef} />
           </div>
@@ -322,38 +332,34 @@ export default function ChatPage() {
 
           <div className="flex flex-col gap-4 flex-1">
             {judges.map((judge) => (
-              <div 
+              <div
                 key={judge.id}
-                className={`relative overflow-hidden rounded-xl border p-4 transition-all duration-500 ${
-                  judge.status === "analyzing" ? "border-white/40 bg-white/5" :
-                  judge.status === "safe" ? "border-green-500/30 bg-green-500/10" :
-                  judge.status === "unsafe" ? "border-red-500/50 bg-red-500/10" :
-                  "border-white/5 bg-transparent"
-                }`}
+                className={`relative overflow-hidden rounded-xl border p-4 transition-all duration-500 ${judge.status === "analyzing" ? "border-white/40 bg-white/5" :
+                    judge.status === "safe" ? "border-green-500/30 bg-green-500/10" :
+                      judge.status === "unsafe" ? "border-red-500/50 bg-red-500/10" :
+                        "border-white/5 bg-transparent"
+                  }`}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <div className={`p-2 rounded-lg ${
-                    judge.status === "analyzing" ? "bg-white/10 text-white" :
-                    judge.status === "safe" ? "bg-green-500/20 text-green-400" :
-                    judge.status === "unsafe" ? "bg-red-500/20 text-red-400" :
-                    "bg-zinc-900 text-zinc-600"
-                  }`}>
+                  <div className={`p-2 rounded-lg ${judge.status === "analyzing" ? "bg-white/10 text-white" :
+                      judge.status === "safe" ? "bg-green-500/20 text-green-400" :
+                        judge.status === "unsafe" ? "bg-red-500/20 text-red-400" :
+                          "bg-zinc-900 text-zinc-600"
+                    }`}>
                     <judge.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className={`font-bold text-sm ${
-                      judge.status === 'unsafe' ? 'text-red-400' : 
-                      judge.status === 'safe' ? 'text-green-400' :
-                      'text-zinc-300'
-                    }`}>{judge.name}</div>
-                    <div className={`text-[10px] font-mono uppercase ${
-                      judge.status === 'unsafe' ? 'text-red-500/70' : 
-                      judge.status === 'safe' ? 'text-green-500/70' :
-                      'text-zinc-500'
-                    }`}>{judge.status}</div>
+                    <div className={`font-bold text-sm ${judge.status === 'unsafe' ? 'text-red-400' :
+                        judge.status === 'safe' ? 'text-green-400' :
+                          'text-zinc-300'
+                      }`}>{judge.name}</div>
+                    <div className={`text-[10px] font-mono uppercase ${judge.status === 'unsafe' ? 'text-red-500/70' :
+                        judge.status === 'safe' ? 'text-green-500/70' :
+                          'text-zinc-500'
+                      }`}>{judge.status}</div>
                   </div>
                 </div>
-                
+
                 {/* Scanning Effect */}
                 {judge.status === "analyzing" && (
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent w-[200%] animate-[shimmer_2s_infinite] -skew-x-12" />
@@ -363,32 +369,28 @@ export default function ChatPage() {
           </div>
 
           {/* Final Verdict */}
-          <div className={`p-4 rounded-xl border transition-all duration-500 ${
-            isLoading ? "bg-zinc-900/50 border-white/10" :
-            judges.some(j => j.status === "unsafe") ? "bg-red-950/30 border-red-500/50" :
-            judges.some(j => j.status === "safe") ? "bg-green-950/30 border-green-500/50" :
-            "bg-zinc-900/30 border-white/5"
-          }`}>
+          <div className={`p-4 rounded-xl border transition-all duration-500 ${isLoading ? "bg-zinc-900/50 border-white/10" :
+              judges.some(j => j.status === "unsafe") ? "bg-red-950/30 border-red-500/50" :
+                judges.some(j => j.status === "safe") ? "bg-green-950/30 border-green-500/50" :
+                  "bg-zinc-900/30 border-white/5"
+            }`}>
             <div className="flex items-center justify-between mb-3">
-              <span className={`text-xs font-mono tracking-wider ${
-                judges.some(j => j.status === "unsafe") ? "text-red-400" : 
-                judges.some(j => j.status === "safe") ? "text-green-400" :
-                "text-zinc-500"
-              }`}>FINAL VERDICT</span>
+              <span className={`text-xs font-mono tracking-wider ${judges.some(j => j.status === "unsafe") ? "text-red-400" :
+                  judges.some(j => j.status === "safe") ? "text-green-400" :
+                    "text-zinc-500"
+                }`}>FINAL VERDICT</span>
               {judges.some(j => j.status === "unsafe") ? (
                 <ShieldAlert className="w-4 h-4 text-red-500" />
               ) : (
-                <ShieldCheck className={`w-4 h-4 ${
-                  judges.some(j => j.status === "safe") ? "text-green-500" : "text-zinc-600"
-                }`} />
+                <ShieldCheck className={`w-4 h-4 ${judges.some(j => j.status === "safe") ? "text-green-500" : "text-zinc-600"
+                  }`} />
               )}
             </div>
-            
-            <div className={`text-xl font-bold tracking-tight ${
-               judges.some(j => j.status === "unsafe") ? "text-red-500" : 
-               judges.some(j => j.status === "safe") ? "text-green-500" :
-               "text-white"
-            }`}>
+
+            <div className={`text-xl font-bold tracking-tight ${judges.some(j => j.status === "unsafe") ? "text-red-500" :
+                judges.some(j => j.status === "safe") ? "text-green-500" :
+                  "text-white"
+              }`}>
               {isLoading ? (
                 <span className="animate-pulse text-white">ANALYZING...</span>
               ) : judges.some(j => j.status === "unsafe") ? (
