@@ -201,8 +201,8 @@ Project_Cerberus/
 │   │   └── chat/
 │   │       └── page.tsx     # Chat interface with rate limit UI and council visualization
 │   ├── components/
-│   │   ├── landing/         # Landing page components (Hero, BentoGrid, etc.)
-│   │   └── ui/              # Reusable UI components (SystemStatusBadge, etc.)
+│   │   ├── landing/         # Landing page components (Hero, BentoGrid, PipelineVis, HeroBackground)
+│   │   └── ui/              # Reusable UI components (SystemStatusBadge, CursorSpotlight, etc.)
 │   ├── hooks/
 │   │   └── useSystemStatus.ts  # Custom hook for backend health checks
 │   ├── lib/
@@ -714,7 +714,7 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
 ### Key UI Components
 
 #### 1. **Landing Page** (`app/page.tsx`)
-- 🌌 **Hero Section**: Breathing text animation, spotlight effect, scrambling taglines
+- 🌌 **Hero Section**: Spline 3D interactive background, breathing text animation, spotlight effect, scrambling taglines
 - 💚 **Live Status Badge**: Real-time backend connectivity with green/red pulse
 - 🎯 **Bento Grid**: 9-card feature showcase with hover effects
 - 🌐 **Pipeline Visualization**: Animated security flow diagram
@@ -733,6 +733,12 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
 - 📱 **Responsive Design**: Mobile-optimized with scroll hints
 
 #### 3. **Reusable Components**
+- **HeroBackground** (`components/landing/HeroBackground.tsx`)
+  - Spline 3D scene integration with WebGL rendering
+  - Edge vignette gradients to hide watermarks
+  - 40% opacity overlay for text readability
+  - Interactive 3D elements with smooth performance
+
 - **SystemStatusBadge** (`components/ui/SystemStatusBadge.tsx`)
   - Polls backend every 30 seconds
   - Green/Red pulse animation
@@ -1164,6 +1170,7 @@ The current v2.0 is a production-ready demo showcasing full-stack skills, but th
 | **UI Library**          | React 19.2.0                | Component-based UI                   |
 | **Styling**             | Tailwind CSS 4              | Utility-first CSS framework          |
 | **Animations**          | Framer Motion 12.23.24      | Production-ready motion library      |
+| **3D Graphics**         | Spline (@splinetool/react-spline) | Interactive WebGL 3D backgrounds |
 | **Icons**               | Lucide React 0.554.0        | Beautiful & consistent icons         |
 | **HTTP Client**         | Axios 1.13.2                | Promise-based HTTP requests          |
 | **Type Safety**         | TypeScript 5                | Static type checking                 |
@@ -1261,9 +1268,10 @@ If you're new to these concepts, here are some recommended resources:
 - ✅ **Weighted Voting System**: Risk score algorithm with judge-specific weights (1x, 3x, 4x)
 - ✅ **Dual-Layer Rate Limiting**: Frontend localStorage + Backend IP tracking (3 prompts/24h)
 - ✅ **Live System Status**: Real-time health monitoring with auto-polling (30s interval)
-- ✅ **Modern Frontend**: Next.js 16 + Tailwind CSS 4 + Framer Motion animations
+- ✅ **Modern Frontend**: Next.js 16 + Tailwind CSS 4 + Framer Motion animations + Spline 3D
+- ✅ **Interactive 3D Hero**: Spline WebGL background with edge vignette masking
 - ✅ **Responsive UI**: Mobile-optimized chat interface with council visualization
-- ✅ **Reusable Components**: SystemStatusBadge, CursorSpotlight, custom hooks
+- ✅ **Reusable Components**: SystemStatusBadge, CursorSpotlight, HeroBackground, custom hooks
 - ✅ **Complete 3-judge security council implementation**
 - ✅ **Context-aware session memory for multi-turn conversations**
 - ✅ **Fail-closed architecture (503 on judge failures)**
