@@ -521,6 +521,7 @@ curl -X POST http://127.0.0.1:8000/session/reset
 6. **IP Logging**: Attacker source address tracked for forensic analysis
 7. **Context Replay**: Session history included in every request for multi-turn conversations
 8. **Response Scanning**: AI output checked for canary leakage before returning to user
+9. **Single Point of Failure Mitigation**: By decoupling security into independent judges, the system ensures that a failure in one method (e.g., keyword matching) is caught by another (e.g., semantic analysis), addressing a **critical vulnerability** in simple wrapper defenses.
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
@@ -695,6 +696,7 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
 - ✅ **Accessibility**: Anyone can clone and run without ML expertise, GPUs, or training data
 - ✅ **Cost-Effective Demo**: No need for expensive infrastructure, datasets, or model training
 - ✅ **Interview Talking Point**: Shows understanding of prompt engineering vs fine-tuning trade-offs
+- ✅ **Data Privacy & Cost Control**: Demonstrates how filtering prompts *at the edge* (before they reach expensive models) prevents data leakage and reduces API costs—a **major concern for enterprise adoption**.
 
 **Key Takeaway:** This project proves you understand **security architecture**, **system design**, and **practical AI engineering** (prompt engineering). In interviews, explaining the difference between prompt engineering (instruction-based) and fine-tuning (training-based) demonstrates **production-level AI thinking** beyond just building a working prototype.
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
@@ -803,7 +805,7 @@ is_safe = risk_score < BLOCKING_THRESHOLD
 | Canary leaked | ✅ Safe (0) | ✅ Safe (0) | ❌ Unsafe (4) | **4** | ❌ **UNSAFE** | Critical security breach |
 
 ### Benefits
-- 🎯 **Reduced False Positives**: Smarter context-aware decisions
+- 🎯 **Reduced False Positives**: Smarter context-aware decisions directly address **user frustration**, a key barrier to adoption in strict security systems.
 - 🧠 **AI-Powered Overrides**: Intent judge (3x) can override keyword matches (1x)
 - 🔴 **Critical Threats Prioritized**: Canary (4x) always blocks when triggered
 - 📊 **Transparent Reasoning**: Risk score visible in logs for debugging
@@ -1098,6 +1100,14 @@ The asyncio architecture is already scalable - the bottleneck would be the Gemin
 2. **Honeypot Responses**: Return fake data to attackers instead of blocking (catch more intel)
 3. **Dynamic Thresholds**: Adjust blocking threshold based on user reputation
 4. **Encrypted Canaries**: Use HMAC signatures instead of plaintext UUIDs
+
+**Q: "What is the business impact of this security architecture?"**
+
+*A:* "This system directly addresses the **'Fear of Deployment'** that stalls AI adoption in enterprises. By providing a **Fail-Closed** and **False-Positive Resistant** layer, it allows companies to deploy LLMs confidently, knowing that:
+1.  **Brand Reputation** is protected from 'jailbreak' screenshots.
+2.  **Data Privacy** is enforced before data leaves the perimeter.
+3.  **Operational Costs** are reduced by blocking malicious traffic early.
+This transforms AI security from a blocker into an enabler for business innovation."
 
 **Features:**
 1. **Multi-User Sessions**: Replace in-memory storage with Redis for distributed rate limiting
