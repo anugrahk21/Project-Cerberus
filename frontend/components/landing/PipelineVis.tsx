@@ -10,8 +10,8 @@ export default function PipelineVis() {
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight mb-4">The Security Pipeline</h2>
-          <p className="text-zinc-500 font-mono text-sm">
+          <h2 className="text-3xl font-bold tracking-tight mb-4 text-white">The Security Pipeline</h2>
+          <p className="text-zinc-400 font-mono text-sm">
             // VISUALIZING_REQUEST_FLOW
           </p>
         </div>

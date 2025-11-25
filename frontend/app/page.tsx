@@ -20,6 +20,7 @@ import BentoGrid from "@/components/landing/BentoGrid";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import BreathingText from "@/components/landing/BreathingText";
 import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
+import HeroBackground from "@/components/landing/HeroBackground";
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
       {/* 1. Hero Section with Spotlight */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
         <Spotlight />
+        <HeroBackground />
         
         <div className="z-10 text-center max-w-5xl px-6 space-y-8">
           <div className="space-y-2">

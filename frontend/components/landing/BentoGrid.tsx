@@ -32,7 +32,7 @@ const BentoCard = ({
       <div className="flex-1">{children}</div>
       <div className="mt-4">
         <h3 className="text-xl font-bold text-white mb-1 font-sans">{title}</h3>
-        <p className="text-sm text-zinc-400 font-mono">{description}</p>
+        <p className="text-sm text-zinc-300 font-mono">{description}</p>
       </div>
     </div>
     {/* Hover Glow - Monochrome */}
@@ -48,7 +48,7 @@ export default function BentoGrid() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-sans tracking-tight">
             System Capabilities
           </h2>
-          <p className="text-zinc-500 font-mono text-sm">
+          <p className="text-zinc-400 font-mono text-sm">
             // ARCHITECTURE_OVERVIEW
           </p>
         </div>
