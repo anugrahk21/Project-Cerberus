@@ -7,7 +7,7 @@ export default function PipelineVis() {
   return (
     <section className="relative py-12 overflow-hidden bg-black text-white">
       <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none" />
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold tracking-tight mb-4 text-white">The Security Pipeline</h2>
@@ -17,7 +17,7 @@ export default function PipelineVis() {
         </div>
 
         <div className="max-w-5xl mx-auto flex flex-col items-center">
-          
+
           {/* 1. User Prompt */}
           <Step delay={0}>
             <div className="w-64 border border-white/20 bg-zinc-900/50 p-4 rounded-lg text-center backdrop-blur-sm">
@@ -44,10 +44,10 @@ export default function PipelineVis() {
           <Connector delay={0.6} />
 
           {/* 3. Judges */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
             <Step delay={0.8} className="h-full">
-              <JudgeCard 
-                title="JUDGE 1: LITERAL" 
+              <JudgeCard
+                title="JUDGE 1: LITERAL"
                 icon={Search}
                 desc="Checks 18+ banned keywords"
                 details={['"ignore"', '"jailbreak"', '"hack"']}
@@ -55,8 +55,8 @@ export default function PipelineVis() {
               />
             </Step>
             <Step delay={1.0} className="h-full">
-              <JudgeCard 
-                title="JUDGE 2: INTENT" 
+              <JudgeCard
+                title="JUDGE 2: INTENT"
                 icon={Brain}
                 desc="AI-powered semantic analysis"
                 details={['Social eng', 'Obfuscated attacks']}
@@ -64,8 +64,8 @@ export default function PipelineVis() {
               />
             </Step>
             <Step delay={1.2} className="h-full">
-              <JudgeCard 
-                title="JUDGE 3: CANARY" 
+              <JudgeCard
+                title="JUDGE 3: CANARY"
                 icon={Eye}
                 desc="Tests if AI leaks system prompt"
                 details={['Injects UUID token', 'Checks for leakage']}
@@ -89,83 +89,83 @@ export default function PipelineVis() {
 
           {/* Split Connector */}
           <div className="relative w-full h-16 mt-2 mb-2">
-             <motion.div 
-               initial={{ height: 0 }}
-               whileInView={{ height: "100%" }}
-               viewport={{ once: true }}
-               transition={{ duration: 0.5, delay: 1.8 }}
-               className="absolute left-1/2 top-0 w-px bg-white/20 -translate-x-1/2 overflow-hidden"
-             >
-                <motion.div 
-                    className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-50"
-                    animate={{ top: ["-100%", "100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 1.8 }}
-                />
-             </motion.div>
-             <motion.div 
-               initial={{ width: 0 }}
-               whileInView={{ width: "50%" }} // Span half width to connect left and right
-               viewport={{ once: true }}
-               transition={{ duration: 0.5, delay: 2.0 }}
-               className="absolute top-full left-1/4 right-1/4 h-px bg-white/20 overflow-hidden"
-             >
-                <motion.div 
-                    className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white to-transparent opacity-50"
-                    animate={{ left: ["-100%", "100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 2.0 }}
-                />
-             </motion.div>
-             {/* Vertical drops from the horizontal line */}
-             <motion.div 
-               initial={{ height: 0 }}
-               whileInView={{ height: "20px" }}
-               viewport={{ once: true }}
-               transition={{ duration: 0.3, delay: 2.3 }}
-               className="absolute top-full left-[25%] w-px bg-white/20 overflow-hidden"
-             >
-                <motion.div 
-                    className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-50"
-                    animate={{ top: ["-100%", "100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 2.3 }}
-                />
-             </motion.div>
-             <motion.div 
-               initial={{ height: 0 }}
-               whileInView={{ height: "20px" }}
-               viewport={{ once: true }}
-               transition={{ duration: 0.3, delay: 2.3 }}
-               className="absolute top-full right-[25%] w-px bg-white/20 overflow-hidden"
-             >
-                <motion.div 
-                    className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-50"
-                    animate={{ top: ["-100%", "100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 2.3 }}
-                />
-             </motion.div>
+            <motion.div
+              initial={{ height: 0 }}
+              whileInView={{ height: "100%" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 1.8 }}
+              className="absolute left-1/2 top-0 w-px bg-white/20 -translate-x-1/2 overflow-hidden"
+            >
+              <motion.div
+                className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-50"
+                animate={{ top: ["-100%", "100%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 1.8 }}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: "50%" }} // Span half width to connect left and right
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 2.0 }}
+              className="absolute top-full left-1/4 right-1/4 h-px bg-white/20 overflow-hidden"
+            >
+              <motion.div
+                className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white to-transparent opacity-50"
+                animate={{ left: ["-100%", "100%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 2.0 }}
+              />
+            </motion.div>
+            {/* Vertical drops from the horizontal line */}
+            <motion.div
+              initial={{ height: 0 }}
+              whileInView={{ height: "20px" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: 2.3 }}
+              className="absolute top-full left-[25%] w-px bg-white/20 overflow-hidden"
+            >
+              <motion.div
+                className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-50"
+                animate={{ top: ["-100%", "100%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 2.3 }}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ height: 0 }}
+              whileInView={{ height: "20px" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: 2.3 }}
+              className="absolute top-full right-[25%] w-px bg-white/20 overflow-hidden"
+            >
+              <motion.div
+                className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-50"
+                animate={{ top: ["-100%", "100%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: 2.3 }}
+              />
+            </motion.div>
 
-             {/* Arrows for split drops */}
-             <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 2.5 }}
-                className="absolute top-[calc(100%+20px)] left-[25%] -translate-x-1/2 -translate-y-1/2 z-10"
-             >
-                <ArrowDown className="w-3 h-3 text-zinc-600" />
-             </motion.div>
-             <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 2.5 }}
-                className="absolute top-[calc(100%+20px)] right-[25%] translate-x-1/2 -translate-y-1/2 z-10"
-             >
-                <ArrowDown className="w-3 h-3 text-zinc-600" />
-             </motion.div>
+            {/* Arrows for split drops */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 2.5 }}
+              className="absolute top-[calc(100%+20px)] left-[25%] -translate-x-1/2 -translate-y-1/2 z-10"
+            >
+              <ArrowDown className="w-3 h-3 text-zinc-600" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 2.5 }}
+              className="absolute top-[calc(100%+20px)] right-[25%] translate-x-1/2 -translate-y-1/2 z-10"
+            >
+              <ArrowDown className="w-3 h-3 text-zinc-600" />
+            </motion.div>
           </div>
 
           {/* 5. Outcomes */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full mt-6">
             {/* Blocked Path */}
             <Step delay={2.5}>
               <div className="group relative overflow-hidden border border-red-900/30 bg-red-950/10 p-6 rounded-xl h-full hover:border-red-500/50 transition-colors">
@@ -266,20 +266,20 @@ function Connector({ delay = 0 }: { delay?: number }) {
         transition={{ duration: 0.3, delay }}
         className="w-px bg-white/20 relative overflow-hidden"
       >
-        <motion.div 
-            className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
-            animate={{ top: ["-100%", "100%"] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: delay }}
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
+          animate={{ top: ["-100%", "100%"] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "linear", delay: delay }}
         />
       </motion.div>
-      <motion.div 
-         initial={{ opacity: 0 }}
-         whileInView={{ opacity: 1 }}
-         viewport={{ once: true }}
-         transition={{ delay: delay + 0.2 }}
-         className="absolute bottom-0 translate-y-1/2 z-10"
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: delay + 0.2 }}
+        className="absolute bottom-0 translate-y-1/2 z-10"
       >
-         <ArrowDown className="w-3 h-3 text-zinc-600" />
+        <ArrowDown className="w-3 h-3 text-zinc-600" />
       </motion.div>
     </div>
   );

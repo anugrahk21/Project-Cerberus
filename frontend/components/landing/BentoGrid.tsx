@@ -53,10 +53,10 @@ export default function BentoGrid() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[200px]">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 auto-rows-[200px]">
           {/* Card 1: Weighted Council (2x2) */}
           <BentoCard
-            className="row-span-2 md:col-span-2 md:row-span-2"
+            className="row-span-2 sm:col-span-2 sm:row-span-2"
             title="Weighted Council"
             description="Three specialized judges vote with different weights to deliver a balanced verdict."
             delay={0.1}
@@ -92,7 +92,7 @@ export default function BentoGrid() {
 
           {/* Card 2: Fail-Closed (1x1) */}
           <BentoCard
-            className="md:col-span-1 md:row-span-1"
+            className="sm:col-span-1 sm:row-span-1"
             title="Fail-Closed"
             description="Default Deny Policy. System locks on error."
             delay={0.2}
@@ -104,7 +104,7 @@ export default function BentoGrid() {
 
           {/* Card 3: Canary Tokens (1x1) */}
           <BentoCard
-            className="md:col-span-1 md:row-span-1"
+            className="sm:col-span-1 sm:row-span-1"
             title="Canary Tokens"
             description="Detects System Prompt Extraction attempts."
             delay={0.3}
@@ -117,7 +117,7 @@ export default function BentoGrid() {
 
           {/* Card 4: Context-Aware (2x1) */}
           <BentoCard
-            className="md:col-span-2 md:row-span-1"
+            className="sm:col-span-2 sm:row-span-1"
             title="Context-Aware Memory"
             description="Maintains conversation history for coherent multi-turn dialogue."
             delay={0.4}
@@ -134,7 +134,7 @@ export default function BentoGrid() {
 
           {/* Card 5: XML Sanitization (1x1) */}
           <BentoCard
-            className="md:col-span-1 md:row-span-1"
+            className="sm:col-span-1 sm:row-span-1"
             title="XML Sanitization"
             description="Prevents tag injection attacks."
             delay={0.5}
@@ -144,28 +144,28 @@ export default function BentoGrid() {
             </div>
           </BentoCard>
 
-           {/* Card 6: Zero Trust (1x1) */}
-           <BentoCard
-            className="md:col-span-1 md:row-span-1"
+          {/* Card 6: Zero Trust (1x1) */}
+          <BentoCard
+            className="sm:col-span-1 sm:row-span-1"
             title="Zero Trust"
             description="Every request is treated as hostile."
             delay={0.6}
           >
-             <div className="h-full flex items-center justify-center">
+            <div className="h-full flex items-center justify-center">
               <Fingerprint className="w-12 h-12 text-zinc-600 group-hover:text-white group-hover:scale-110 transition-all" />
             </div>
           </BentoCard>
 
           {/* Card 7: Forensic Logging (2x1) */}
           <BentoCard
-            className="md:col-span-2 md:row-span-1"
+            className="sm:col-span-2 sm:row-span-1"
             title="Forensic Logging"
             description="Tracks attack sources with IP fingerprinting and timestamped audit trails."
             delay={0.7}
           >
             <div className="h-full flex flex-col justify-center px-6 font-mono text-[10px] text-zinc-500 space-y-2 group-hover:text-zinc-300 transition-colors">
               <div className="flex items-center gap-2 border-l-2 border-red-500 pl-2 bg-red-500/5 py-1 rounded-r">
-                <span className="text-red-500 font-bold">BLOCKED</span> 
+                <span className="text-red-500 font-bold">BLOCKED</span>
                 <span className="text-zinc-400">192.168.1.42</span>
               </div>
               <div className="pl-3 flex items-center gap-2">
@@ -180,7 +180,7 @@ export default function BentoGrid() {
 
           {/* Card 8: Semantic Analysis (1x1) */}
           <BentoCard
-            className="md:col-span-1 md:row-span-1"
+            className="sm:col-span-1 sm:row-span-1"
             title="Semantic Analysis"
             description="AI understands intent beyond keywords."
             delay={0.8}
@@ -192,7 +192,7 @@ export default function BentoGrid() {
 
           {/* Card 9: Stealth Response (1x1) */}
           <BentoCard
-            className="md:col-span-1 md:row-span-1"
+            className="sm:col-span-1 sm:row-span-1"
             title="Stealth Response"
             description="Sanitized errors prevent reconnaissance."
             delay={0.9}
