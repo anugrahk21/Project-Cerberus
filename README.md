@@ -28,28 +28,29 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 ##  Table of Contents
 
 1. 🚀 [What's New](#-whats-new-in-v20-enhanced-security-build)
-2. 🧠 [Technical Concepts](#-technical-concepts-demonstrated)
-3. 🏗️ [Project Structure](#️-project-structure)
-4. 🔧 [Setup Instructions](#-setup-instructions)
-5. 🎮 [How to Use](#-how-to-use)
-6. 🔍 [Security Pipeline](#-how-it-works-the-security-pipeline)
-7. 🧪 [Testing](#-testing-the-system)
-8. 📊 [Performance & Scalability](#-performance--scalability)
-9. ⚖️ [API vs Custom LLM Approach](#️-api-vs-custom-llm-approach)
-10. � [Frontend Architecture & UI/UX](#-frontend-architecture--uiux)
-11. ⚖️ [Weighted Voting System Deep Dive](#️-weighted-voting-system-deep-dive)
-12. 🚦 [Rate Limiting Architecture](#-rate-limiting-architecture)
-13. 🛑 [All Blocking & Stopping Mechanisms](#-all-blocking--stopping-mechanisms)
-14. 🎓 [Interview Preparation](#-interview-preparation-key-talking-points)
-15. 🛠️ [Technologies Used](#️-technologies-used)
-16. 🔐 [Security Considerations](#-security-considerations)
-17. 🚨 [Troubleshooting](#-troubleshooting)
-18. 📚 [Learning Resources](#-learning-resources)
-19. 📝 [Version History](#-version-history)
-20. 📜 [License](#-license)
-21. 👤 [Author](#-author)
-22. 🤝 [Contributing](#-contributing)
-23. 🌟 [Acknowledgments](#-acknowledgments)
+2. 💡 [Project Philosophy & Leadership](#-project-philosophy--leadership)
+3. 🧠 [Technical Concepts](#-technical-concepts-demonstrated)
+4. 🏗️ [Project Structure](#️-project-structure)
+5. 🔧 [Setup Instructions](#-setup-instructions)
+6. 🎮 [How to Use](#-how-to-use)
+7. 🔍 [Security Pipeline](#-how-it-works-the-security-pipeline)
+8. 🧪 [Testing](#-testing-the-system)
+9. 📊 [Performance & Scalability](#-performance--scalability)
+10. ⚖️ [API vs Custom LLM Approach](#️-api-vs-custom-llm-approach)
+11. � [Frontend Architecture & UI/UX](#-frontend-architecture--uiux)
+12. ⚖️ [Weighted Voting System Deep Dive](#️-weighted-voting-system-deep-dive)
+13. 🚦 [Rate Limiting Architecture](#-rate-limiting-architecture)
+14. 🛑 [All Blocking & Stopping Mechanisms](#-all-blocking--stopping-mechanisms)
+15. 🎓 [Interview Preparation](#-interview-preparation-key-talking-points)
+16. 🛠️ [Technologies Used](#️-technologies-used)
+17. 🔐 [Security Considerations](#-security-considerations)
+18. 🚨 [Troubleshooting](#-troubleshooting)
+19. 📚 [Learning Resources](#-learning-resources)
+20. 📝 [Version History](#-version-history)
+21. 📜 [License](#-license)
+22. 👤 [Author](#-author)
+23. 🤝 [Contributing](#-contributing)
+24. 🌟 [Acknowledgments](#-acknowledgments)
 
 ---
 ## 🚀 What's New in v2.0 (Enhanced Security Build)
@@ -118,6 +119,24 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 - 🎯 **Improved Accuracy**: Reduced false negatives through advanced prompt engineering techniques
 - 🔍 **18+ Banned Keywords**: Expanded keyword list including jailbreak patterns
 - 💬 **Zero-Shot Classification**: Instructing Gemini API to act as security classifiers without model fine-tuning
+<p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
+
+---
+## 💡 Project Philosophy & Leadership
+
+This project represents a **research-driven approach** to securing Large Language Models.
+
+### 🏗️ Core Philosophy
+- **Research-First Development**: Built on the principle that "defense must evolve faster than attacks." This addresses a **critical pain point** identified in research: companies are scared to deploy AI due to prompt injection risks. The system implements novel concepts like the **Shadow-Prompt Firewall** and **Weighted Voting Logic** derived from analyzing real-world jailbreak patterns.
+- **Fail-Closed Architecture**: A security-critical design choice where system failure results in a block, ensuring no prompt leaks through due to error.
+- **Defense-in-Depth**: Moving beyond simple keyword filtering to a multi-layered approach (Literal + Intent + Canary) that mimics enterprise-grade security stacks.
+
+### 👨‍💻 Leadership & Architecture
+- **Architected & Led**: Conceived the entire security pipeline, defining the interaction between the frontend, the FastAPI backend, and the Google Gemini integration.
+- **Technical Strategy**: Made key architectural decisions, including the shift to **asynchronous parallel judging** (reducing latency by 60%) and the implementation of **stateful session management** for context-aware security.
+- **AI-Assisted Workflow**: Leveraged AI as a force multiplier—directing the AI to generate boilerplate and specific implementations while retaining full control over the system design, logic, and security constraints.
+- **Documentation Standard**: Established a high standard for documentation (as seen in this README), ensuring the project is not just code, but a clear communication of complex security concepts.
+
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
@@ -470,8 +489,8 @@ curl -X POST http://127.0.0.1:8000/session/reset
 │    • Timestamp      │       │    • System prompt  │
 │    • Prompt text    │       │    • Session history│
 │    • Reason         │       │    • Canary embed   │
-│    • Canary ID      │       │    • XML wrap input │
-│    • IP address     │       │                     │
+│    • IP address     │       │    • XML wrap input │
+│    • Risk score     │       │                     │
 │                     │       │ 2. Forward to Gemini│
 │ 2. Return Error     │       │    gemini-2.5-pro   │
 │    • 403 (attack)   │       │                     │
@@ -627,7 +646,7 @@ For enterprise/production use, companies would deploy **self-hosted models**:
 
 **Main Chat Model:**
 - 🧠 **Custom LLM** (Llama 3, Mistral, or proprietary model)
-- 📊 **Fine-tuned on Domain Data**: Customer service scripts, product docs, FAQs
+- 📊 **Fine-Tuned on Domain Data**: Customer service scripts, product docs, FAQs
 - 🔒 **Data Sovereignty**: All data stays within company infrastructure
 - 💰 **Fixed Cost**: Pay for GPU hours, not per request
 
@@ -1043,7 +1062,7 @@ For production, I'd benchmark this against FastAPI alternatives like Starlette o
 ---
 **Q: "How would you scale this for 10,000 concurrent users?"**
 
-*A:* "Great question. The current implementation is a single-user demo. For production scale:
+*A:* "The current implementation is a single-user demo. For production scale:
 
 **Immediate Changes:**
 1. Replace in-memory `SESSION_HISTORY` with Redis (sub-millisecond lookups, TTL support)
