@@ -14,6 +14,12 @@ interface TextScrambleProps {
 export default function TextScramble({ text, phrases, className, duration = 2000 }: TextScrambleProps) {
   const [displayText, setDisplayText] = useState("");
   const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Fade in on mount
+    setIsVisible(true);
+  }, []);
 
   useEffect(() => {
     const targetText = phrases ? phrases[phraseIndex] : (text || "");
@@ -47,8 +53,8 @@ export default function TextScramble({ text, phrases, className, duration = 2000
           }
         }
 
-        iteration += 1 / 3;
-      }, 30);
+        iteration += 1 / 2;
+      }, 20);
     };
 
     startScramble();
@@ -56,5 +62,9 @@ export default function TextScramble({ text, phrases, className, duration = 2000
     return () => clearInterval(interval);
   }, [text, phrases, phraseIndex, duration]);
 
-  return <span className={className}>{displayText}</span>;
+  return (
+    <span className={`${className} transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      {displayText}
+    </span>
+  );
 }
