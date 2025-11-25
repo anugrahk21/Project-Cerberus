@@ -24,9 +24,8 @@ export default function HeroBackground() {
           onLoad={() => setIsLoaded(true)}
         />
       </div>
-      {/* Edge gradients to hide Spline badge */}
-      <div className="absolute top-0 right-0 bottom-0 w-48 pointer-events-none bg-gradient-to-l from-black via-black/50 to-transparent" />
-      <div className="absolute left-0 right-0 bottom-0 h-48 pointer-events-none bg-gradient-to-t from-black via-black/50 to-transparent" />
+      {/* Edge gradients for right vintage vignette */}
+      <div className="absolute top-0 right-0 bottom-0 w-70 pointer-events-none bg-gradient-to-r from-transparent via-black/100 to-black" />
     </div>
   );
 }
