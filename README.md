@@ -127,7 +127,7 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 This project represents a **research-driven approach** to securing Large Language Models.
 
 ### 🏗️ Core Philosophy
-- **Research-First Development**: Built on the principle that "defense must evolve faster than attacks." This addresses a **critical pain point** identified in research: companies are scared to deploy AI due to prompt injection risks. The system implements novel concepts like the **Shadow-Prompt Firewall** and **Weighted Voting Logic** derived from analyzing real-world jailbreak patterns.
+- **Research-First Development**: Built on the principle that "defense must evolve faster than attacks." This addresses a **critical pain point** identified in research: companies are **avoiding AI deployment** due to security needs and the **extra cost** of remediation. Furthermore, even when adopted, organizations often **overlook essential safety measures**, leaving them vulnerable to misuse and reputational damage. The system implements novel concepts like the **Shadow-Prompt Firewall** and **Weighted Voting Logic** derived from analyzing real-world jailbreak patterns.
 - **Fail-Closed Architecture**: A security-critical design choice where system failure results in a block, ensuring no prompt leaks through due to error.
 - **Defense-in-Depth**: Moving beyond simple keyword filtering to a multi-layered approach (Literal + Intent + Canary) that mimics enterprise-grade security stacks.
 
@@ -1103,7 +1103,7 @@ The asyncio architecture is already scalable - the bottleneck would be the Gemin
 
 **Q: "What is the business impact of this security architecture?"**
 
-*A:* "This system directly addresses the **'Fear of Deployment'** that stalls AI adoption in enterprises. By providing a **Fail-Closed** and **False-Positive Resistant** layer, it allows companies to deploy LLMs confidently, knowing that:
+*A:* "This system directly addresses the need for **Operational Resilience** that stalls AI adoption in enterprises. It mitigates the **extra cost** of security incidents and ensures that safety measures are not **overlooked** during rapid deployment. By providing a **Fail-Closed** and **False-Positive Resistant** layer, it allows companies to deploy LLMs confidently, knowing that:
 1.  **Brand Reputation** is protected from 'jailbreak' screenshots.
 2.  **Data Privacy** is enforced before data leaves the perimeter.
 3.  **Operational Costs** are reduced by blocking malicious traffic early.
@@ -1184,6 +1184,7 @@ The current v2.0 is a production-ready demo showcasing full-stack skills, but th
 - ✅ **Quota exhaustion attacks** (3 prompts per 24-hour rolling window)
 - ✅ **IP-based abuse** (per-source tracking and blocking)
 - ✅ Repeated attacks from same source (via IP logging and rate limits)
+- ✅ **Negligence & Misuse**: Acts as a safety net for organizations that might otherwise **forget to implement** basic safety measures during rapid AI rollout.
 
 ### What This System DOES NOT Protect Against
 - ❌ **Model-level vulnerabilities**: If Gemini itself has a zero-day exploit, judges may not catch it
