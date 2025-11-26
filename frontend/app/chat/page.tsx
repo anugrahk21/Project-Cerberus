@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, ArrowLeft, ShieldAlert, ChevronDown } from "lucide-react";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
+import BackToTop from "@/components/ui/BackToTop";
 import { useSystemStatus } from "@/hooks/useSystemStatus";
 import { useCouncil } from "@/hooks/useCouncil";
 import { useRateLimit } from "@/hooks/useRateLimit";
@@ -311,6 +312,9 @@ export default function ChatPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Back To Top for Chat Container */}
+      <BackToTop containerRef={chatContainerRef} />
     </div>
   );
 }

@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description: "A Production-Grade Multi-Layered Security System for LLMs.",
 };
 
+import SmoothScroll from "@/components/ui/SmoothScroll";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,6 +23,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} bg-[#020617] text-slate-200 antialiased selection:bg-cyan-500/30`}
       >
+        <SmoothScroll />
         {children}
         <Analytics />
       </body>

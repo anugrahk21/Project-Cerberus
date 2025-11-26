@@ -21,6 +21,7 @@ import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import BreathingText from "@/components/landing/BreathingText";
 import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
 import HeroBackground from "@/components/landing/HeroBackground";
+import BackToTop from "@/components/ui/BackToTop";
 
 export default function Home() {
   return (
@@ -73,12 +74,13 @@ export default function Home() {
               </button>
             </Link>
 
-            <Link href="#pipeline">
-              <button className="px-8 py-4 rounded-full border border-white/20 text-zinc-400 hover:text-white hover:border-white/50 transition-all flex items-center gap-2">
-                <span>READ THE DOCS</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </Link>
+            <button
+              onClick={() => document.getElementById('pipeline')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-4 rounded-full border border-white/20 text-zinc-400 hover:text-white hover:border-white/50 transition-all flex items-center gap-2"
+            >
+              <span>READ THE DOCS</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -119,6 +121,7 @@ export default function Home() {
         </div>
       </footer>
 
+      <BackToTop />
     </main>
   );
 }

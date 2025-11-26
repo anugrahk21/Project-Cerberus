@@ -1,7 +1,28 @@
 @import "tailwindcss";
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; - Removed for Lenis fluid scroll */
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 :root {
@@ -27,11 +48,11 @@ body {
   .bg-grid-white {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.04)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
   }
-  
+
   .glass-panel {
-    @apply bg-white/5 backdrop-blur-2xl border-t border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)];
+    @apply bg-white/5 backdrop-blur-2xl border-t border-white/10 shadow-[0_8px_32px_0_rgba(0, 0, 0, 0.36)];
   }
-  
+
   .glass-card {
     @apply bg-gradient-to-br from-white/5 to-transparent backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-300;
   }
@@ -59,12 +80,14 @@ body {
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #27272a; /* zinc-800 */
+    background: #27272a;
+    /* zinc-800 */
     border-radius: 9999px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #3f3f46; /* zinc-700 */
+    background: #3f3f46;
+    /* zinc-700 */
   }
 }
 
@@ -73,10 +96,12 @@ body {
     transform: scale(0.65);
     opacity: 0.35;
   }
+
   50% {
     transform: scale(1);
     opacity: 0.6;
   }
+
   100% {
     transform: scale(0.65);
     opacity: 0.35;
@@ -88,13 +113,14 @@ body {
     transform: scale(0.8);
     opacity: 0.2;
   }
+
   50% {
     transform: scale(1.35);
     opacity: 0.45;
   }
+
   100% {
     transform: scale(0.8);
     opacity: 0.2;
   }
 }
-
