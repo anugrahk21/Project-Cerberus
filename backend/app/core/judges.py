@@ -13,7 +13,7 @@ import asyncio
 import google.generativeai as genai
 from typing import Tuple
 from app.config import GEMINI_API_KEY
-from app.utils import get_canary
+from app.core.utils import get_canary
 
 # Configure the Gemini API with our credentials
 genai.configure(api_key=GEMINI_API_KEY)
@@ -127,7 +127,7 @@ RESPOND WITH ONLY ONE WORD: "SAFE" or "UNSAFE"
 """
 
         # Call the Gemini API to analyze intent
-        response = judge_model.generate_content(judge_prompt)
+        response = await judge_model.generate_content_async(judge_prompt)
 
         #flow of control does not reach here if error occurs at response generation(above line)
         #error is thrown and caught in except block below
@@ -185,7 +185,7 @@ Now respond to this user query:
 {prompt}"""
 
         # Send to the AI and see what it says
-        response = judge_model.generate_content(test_prompt)
+        response = await judge_model.generate_content_async(test_prompt)
         response_text = response.text
         
         # Check if the canary appears anywhere in the response

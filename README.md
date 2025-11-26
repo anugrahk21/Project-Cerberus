@@ -184,33 +184,48 @@ This project showcases advanced Computer Science and Cybersecurity concepts:
 Project_Cerberus/
 ├── backend/
 │   ├── app/
-│   │   ├── __init__.py      # Package initialization with version header
-│   │   ├── main.py          # FastAPI routes, rate limiting & session management
-│   │   ├── judges.py        # 3-judge weighted voting system with parallel execution
-│   │   ├── utils.py         # Security utilities (XML wrapper + Canary generator)
-│   │   └── config.py        # Environment variables with fail-fast validation
+│   │   ├── api/
+│   │   │   └── routes.py       # API Endpoints (Chat, Logs, Session)
+│   │   ├── core/
+│   │   │   ├── judges.py       # 3-judge weighted voting system (Async)
+│   │   │   └── utils.py        # Security utilities (XML wrapper + Canary)
+│   │   ├── services/
+│   │   │   ├── llm.py          # Gemini API Service
+│   │   │   ├── logger.py       # Async File Logging
+│   │   │   ├── rate_limiter.py # Rate Limiting Service
+│   │   │   └── session.py      # Session History Management
+│   │   ├── main.py             # App Entry Point & Config
+│   │   ├── schemas.py          # Pydantic Data Models
+│   │   ├── config.py           # Environment Variables
+│   │   └── __init__.py
 │   ├── logs/
-│   │   └── attacks.json     # Attack audit trail with IP tracking (auto-generated)
-│   ├── .env                 # Secrets: API keys and configuration (gitignored)
-│   ├── requirements.txt     # Python dependencies
-│   └── runtime.txt          # Python version for deployment
+│   │   └── attacks.json        # Attack Audit Trail
+│   ├── tests/
+│   │   ├── test_api.py         # API Endpoint Tests
+│   │   └── test_judges.py      # Security Logic Unit Tests
+│   ├── .env                    # Secrets (gitignored)
+│   ├── requirements.txt        # Python Dependencies
+│   └── runtime.txt             # Deployment Config
 ├── frontend/
 │   ├── app/
-│   │   ├── page.tsx         # Landing page with system status badge
-│   │   ├── layout.tsx       # Root layout and global styles
-│   │   └── chat/
-│   │       └── page.tsx     # Chat interface with rate limit UI and council visualization
+│   │   ├── chat/
+│   │   │   └── page.tsx        # Chat Interface (Refactored)
+│   │   ├── layout.tsx
+│   │   └── page.tsx            # Landing Page
 │   ├── components/
-│   │   ├── landing/         # Landing page components (Hero, BentoGrid, PipelineVis, HeroBackground)
-│   │   └── ui/              # Reusable UI components (SystemStatusBadge, CursorSpotlight, etc.)
+│   │   ├── landing/            # Landing Page Components
+│   │   └── ui/                 # Reusable UI Components
 │   ├── hooks/
-│   │   └── useSystemStatus.ts  # Custom hook for backend health checks
+│   │   ├── useChat.ts          # Chat Logic & State
+│   │   ├── useCouncil.ts       # Council Visualization Logic
+│   │   ├── useRateLimit.ts     # Rate Limit Logic
+│   │   └── useSystemStatus.ts  # Backend Health Check
 │   ├── lib/
-│   │   ├── api.ts           # API client with TypeScript interfaces
-│   │   └── utils.ts         # Utility functions
-│   ├── package.json         # Frontend dependencies (Next.js, React, Tailwind)
-│   └── .next/               # Next.js build output (gitignored)
-└── README.md                # You are here!
+│   │   ├── api.ts              # API Client
+│   │   └── utils.ts
+│   ├── package.json
+│   └── tsconfig.json
+└── README.md
 ```
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
@@ -574,6 +589,21 @@ curl -X POST http://127.0.0.1:8000/chat ^
   -H "Content-Type: application/json" ^
   -d "{\"prompt\": \"Give me an example of it in real life\"}"
 ```
+
+### 🤖 Automated Testing
+
+The project now includes a comprehensive test suite using `pytest`.
+
+**Run Backend Tests:**
+```bash
+cd backend
+python -m pytest
+```
+
+**What is tested?**
+- **Unit Tests (`tests/test_judges.py`)**: Mocks the Gemini API to verify that the "Council of Judges" logic (Literal, Intent, Canary) works correctly without spending API credits.
+- **API Tests (`tests/test_api.py`)**: Verifies that the FastAPI endpoints (`/`, `/chat`) are reachable and return correct status codes.
+
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
@@ -750,6 +780,16 @@ This portfolio project intentionally uses APIs with **prompt engineering** to:
   - Adds depth to glassmorphic UI
 
 #### 4. **Custom Hooks**
+- **useChat** (`hooks/useChat.ts`)
+  - Manages message history and API interactions
+  - Handles error states and loading indicators
+- **useCouncil** (`hooks/useCouncil.ts`)
+  - Manages the visual state of the 3 judges
+  - Handles "scanning" animations and verdict updates
+- **useRateLimit** (`hooks/useRateLimit.ts`)
+  - Tracks local prompt usage (localStorage)
+  - Syncs with backend 429 errors to prevent bypass
+  - Manages "Coffee Break" modal state
 - **useSystemStatus** (`hooks/useSystemStatus.ts`)
   - Centralized health check logic
   - Automatic cleanup on unmount

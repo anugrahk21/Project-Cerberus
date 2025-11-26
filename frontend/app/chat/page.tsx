@@ -11,69 +11,30 @@ Note: Built for AI Cybersecurity Research Portfolio.
 
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, Brain, Search, Eye, ArrowLeft, ShieldAlert, ChevronDown } from "lucide-react";
-import { sendChat, ChatResponse, ChatError } from "@/lib/api";
+import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, ArrowLeft, ShieldAlert, ChevronDown } from "lucide-react";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
 import { useSystemStatus } from "@/hooks/useSystemStatus";
-
-// Types for the Council Visualization
-type JudgeStatus = "idle" | "analyzing" | "safe" | "unsafe";
-
-interface JudgeState {
-  id: number;
-  name: string;
-  icon: any;
-  status: JudgeStatus;
-  verdict?: string;
-}
-
-const FREE_CHAT_LIMIT = 3;
-const CHAT_COUNT_STORAGE_KEY = "cerberus-chat-count";
+import { useCouncil } from "@/hooks/useCouncil";
+import { useRateLimit } from "@/hooks/useRateLimit";
+import { useChat } from "@/hooks/useChat";
 
 export default function ChatPage() {
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<{ role: "user" | "ai"; content: string; isError?: boolean }[]>([]);
   const { isSystemOnline, isLoading: isStatusLoading } = useSystemStatus();
   const [showScrollHint, setShowScrollHint] = useState(true);
-  const [messageCount, setMessageCount] = useState(0);
-  const [showLimitModal, setShowLimitModal] = useState(false);
-  const [limitMessage, setLimitMessage] = useState("You\'ve used all free prompts for today. Cerberus needs to recharge.");
 
-  // Council State
-  const [judges, setJudges] = useState<JudgeState[]>([
-    { id: 1, name: "Literal Judge", icon: Search, status: "idle" },
-    { id: 2, name: "Intent Judge", icon: Brain, status: "idle" },
-    { id: 3, name: "Canary Judge", icon: Eye, status: "idle" },
-  ]);
+  // Custom Hooks
+  const council = useCouncil();
+  const rateLimit = useRateLimit();
+  const { input, setInput, isLoading, messages, setMessages, handleSend } = useChat(council, rateLimit);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const councilRef = useRef<HTMLElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const hasReachedLimit = messageCount >= FREE_CHAT_LIMIT;
-  const remainingPrompts = Math.max(FREE_CHAT_LIMIT - messageCount, 0);
-
-  const persistMessageCount = (value: number) => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(CHAT_COUNT_STORAGE_KEY, String(value));
-  };
-
-  const incrementMessageCount = () => {
-    setMessageCount((prev) => {
-      const next = prev + 1;
-      persistMessageCount(next);
-      if (next >= FREE_CHAT_LIMIT) {
-        setLimitMessage("Cerberus free tier just maxed out.\nThe guardians need a nap before more prompts.");
-        setShowLimitModal(true);
-      }
-      return next;
-    });
-  };
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -86,21 +47,10 @@ export default function ChatPage() {
 
   useEffect(() => {
     scrollToBottom();
-    // Auto-focus input after message is sent/received
     if (!isLoading) {
       inputRef.current?.focus();
     }
   }, [messages, isLoading]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem(CHAT_COUNT_STORAGE_KEY);
-    if (!stored) return;
-    const parsed = parseInt(stored, 10);
-    if (!Number.isNaN(parsed)) {
-      setMessageCount(parsed);
-    }
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -117,7 +67,6 @@ export default function ChatPage() {
     return () => observer.disconnect();
   }, []);
 
-  // Force window to top on mobile load
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -132,82 +81,7 @@ export default function ChatPage() {
         isError: !isSystemOnline
       }]);
     }
-  }, [isSystemOnline, isStatusLoading]);
-
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
-    if (hasReachedLimit) {
-      setLimitMessage("Cerberus free tier allows only 3 prompts.\nCome back tomorrow!");
-      setShowLimitModal(true);
-      return;
-    }
-
-    const userPrompt = input;
-    setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userPrompt }]);
-    incrementMessageCount();
-    setIsLoading(true);
-
-    // Reset Judges to Analyzing
-    setJudges((prev) => prev.map((j) => ({ ...j, status: "analyzing", verdict: undefined })));
-
-    try {
-      const data = await sendChat(userPrompt);
-
-      // Update judges based on the actual backend response
-      if (data.verdict) {
-        setJudges((prev) => prev.map((j) => {
-          let status: JudgeStatus = "idle";
-          if (j.id === 1) status = data.verdict.literal === "safe" ? "safe" : "unsafe";
-          if (j.id === 2) status = data.verdict.intent === "safe" ? "safe" : "unsafe";
-          if (j.id === 3) status = data.verdict.canary === "safe" ? "safe" : "unsafe";
-          return { ...j, status };
-        }));
-      } else if (data.security_check === "passed") {
-        setJudges((prev) => prev.map((j) => ({ ...j, status: "safe", verdict: "PASSED" })));
-      }
-
-      setMessages((prev) => [...prev, { role: "ai", content: data.response }]);
-    } catch (error: any) {
-      console.error("Chat error:", error);
-
-      if (error.detail?.error === "rate_limit") {
-        const retryAfterSeconds = error.detail?.retry_after;
-        const etaMinutes = retryAfterSeconds ? Math.ceil(retryAfterSeconds / 60) : null;
-        const eta = etaMinutes
-          ? `\nTry again in about ${etaMinutes} minute${etaMinutes === 1 ? "" : "s"}.`
-          : "";
-        const modalMessage = `${error.detail.message}${eta}`;
-        setLimitMessage(modalMessage);
-        setShowLimitModal(true);
-        setMessageCount(FREE_CHAT_LIMIT);
-        persistMessageCount(FREE_CHAT_LIMIT);
-        setMessages((prev) => [...prev, { role: "ai", content: error.detail.message, isError: true }]);
-        setJudges((prev) => prev.map((j) => ({ ...j, status: "idle" })));
-        // If it's a security block (403), show red judges based on verdict if available
-      } else if (error.detail?.error === "Request blocked by security system" || error.detail?.error === "Response blocked by security system") {
-        if (error.detail.verdict) {
-          setJudges((prev) => prev.map((j) => {
-            let status: JudgeStatus = "idle";
-            if (j.id === 1) status = error.detail.verdict.literal === "safe" ? "safe" : "unsafe";
-            if (j.id === 2) status = error.detail.verdict.intent === "safe" ? "safe" : "unsafe";
-            if (j.id === 3) status = error.detail.verdict.canary === "safe" ? "safe" : "unsafe";
-            return { ...j, status };
-          }));
-        } else {
-          // Fallback if no detailed verdict
-          setJudges((prev) => prev.map((j) => ({ ...j, status: "unsafe", verdict: "BLOCKED" })));
-        }
-        setMessages((prev) => [...prev, { role: "ai", content: error.detail.message, isError: true }]);
-      } else {
-        // Generic error
-        setJudges((prev) => prev.map((j) => ({ ...j, status: "idle" })));
-        setMessages((prev) => [...prev, { role: "ai", content: "An unexpected error occurred.", isError: true }]);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [isSystemOnline, isStatusLoading, setMessages]);
 
   return (
     <div className="lg:h-screen min-h-screen bg-black text-zinc-200 flex flex-col font-sans selection:bg-white/20 lg:overflow-hidden">
@@ -242,10 +116,10 @@ export default function ChatPage() {
               >
                 <div
                   className={`max-w-[80%] p-5 rounded-2xl backdrop-blur-md ${msg.role === "user"
-                      ? "bg-white text-black border border-white/20 rounded-tr-none"
-                      : msg.isError
-                        ? "bg-zinc-900 border border-white/20 text-white rounded-tl-none"
-                        : "bg-zinc-900/50 border border-white/10 text-zinc-300 rounded-tl-none"
+                    ? "bg-white text-black border border-white/20 rounded-tr-none"
+                    : msg.isError
+                      ? "bg-zinc-900 border border-white/20 text-white rounded-tl-none"
+                      : "bg-zinc-900/50 border border-white/10 text-zinc-300 rounded-tl-none"
                     }`}
                 >
                   {msg.isError && <AlertTriangle className="w-5 h-5 mb-2 text-white" />}
@@ -288,7 +162,7 @@ export default function ChatPage() {
               <div className="pl-4">
                 <Terminal className="w-5 h-5 text-zinc-500" />
               </div>
-              {hasReachedLimit ? (
+              {rateLimit.hasReachedLimit ? (
                 <div className="flex-1 py-3 px-2 font-mono text-sm text-left text-white/70 leading-snug whitespace-normal">
                   Free tier exhausted – Cerberus is on a coffee break.
                 </div>
@@ -311,14 +185,14 @@ export default function ChatPage() {
               )}
               <button
                 onClick={handleSend}
-                disabled={isLoading || !input.trim() || !isSystemOnline || hasReachedLimit}
+                disabled={isLoading || !input.trim() || !isSystemOnline || rateLimit.hasReachedLimit}
                 className="p-3 rounded-xl bg-white text-black hover:bg-zinc-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-500"
               >
                 <Send className="w-5 h-5" />
               </button>
             </div>
             <p className="max-w-4xl mx-auto mt-2 text-[10px] font-mono text-zinc-500 text-center">
-              {hasReachedLimit ? "Free quota reached for today." : `${remainingPrompts} of ${FREE_CHAT_LIMIT} free prompts left.`}
+              {rateLimit.hasReachedLimit ? "Free quota reached for today." : `${rateLimit.remainingPrompts} of ${3} free prompts left.`}
             </p>
           </div>
         </main>
@@ -331,31 +205,31 @@ export default function ChatPage() {
           </div>
 
           <div className="flex flex-col gap-4 flex-1">
-            {judges.map((judge) => (
+            {council.judges.map((judge) => (
               <div
                 key={judge.id}
                 className={`relative overflow-hidden rounded-xl border p-4 transition-all duration-500 ${judge.status === "analyzing" ? "border-white/40 bg-white/5" :
-                    judge.status === "safe" ? "border-green-500/30 bg-green-500/10" :
-                      judge.status === "unsafe" ? "border-red-500/50 bg-red-500/10" :
-                        "border-white/5 bg-transparent"
+                  judge.status === "safe" ? "border-green-500/30 bg-green-500/10" :
+                    judge.status === "unsafe" ? "border-red-500/50 bg-red-500/10" :
+                      "border-white/5 bg-transparent"
                   }`}
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className={`p-2 rounded-lg ${judge.status === "analyzing" ? "bg-white/10 text-white" :
-                      judge.status === "safe" ? "bg-green-500/20 text-green-400" :
-                        judge.status === "unsafe" ? "bg-red-500/20 text-red-400" :
-                          "bg-zinc-900 text-zinc-600"
+                    judge.status === "safe" ? "bg-green-500/20 text-green-400" :
+                      judge.status === "unsafe" ? "bg-red-500/20 text-red-400" :
+                        "bg-zinc-900 text-zinc-600"
                     }`}>
                     <judge.icon className="w-5 h-5" />
                   </div>
                   <div>
                     <div className={`font-bold text-sm ${judge.status === 'unsafe' ? 'text-red-400' :
-                        judge.status === 'safe' ? 'text-green-400' :
-                          'text-zinc-300'
+                      judge.status === 'safe' ? 'text-green-400' :
+                        'text-zinc-300'
                       }`}>{judge.name}</div>
                     <div className={`text-[10px] font-mono uppercase ${judge.status === 'unsafe' ? 'text-red-500/70' :
-                        judge.status === 'safe' ? 'text-green-500/70' :
-                          'text-zinc-500'
+                      judge.status === 'safe' ? 'text-green-500/70' :
+                        'text-zinc-500'
                       }`}>{judge.status}</div>
                   </div>
                 </div>
@@ -370,32 +244,32 @@ export default function ChatPage() {
 
           {/* Final Verdict */}
           <div className={`p-4 rounded-xl border transition-all duration-500 ${isLoading ? "bg-zinc-900/50 border-white/10" :
-              judges.some(j => j.status === "unsafe") ? "bg-red-950/30 border-red-500/50" :
-                judges.some(j => j.status === "safe") ? "bg-green-950/30 border-green-500/50" :
-                  "bg-zinc-900/30 border-white/5"
+            council.judges.some(j => j.status === "unsafe") ? "bg-red-950/30 border-red-500/50" :
+              council.judges.some(j => j.status === "safe") ? "bg-green-950/30 border-green-500/50" :
+                "bg-zinc-900/30 border-white/5"
             }`}>
             <div className="flex items-center justify-between mb-3">
-              <span className={`text-xs font-mono tracking-wider ${judges.some(j => j.status === "unsafe") ? "text-red-400" :
-                  judges.some(j => j.status === "safe") ? "text-green-400" :
-                    "text-zinc-500"
+              <span className={`text-xs font-mono tracking-wider ${council.judges.some(j => j.status === "unsafe") ? "text-red-400" :
+                council.judges.some(j => j.status === "safe") ? "text-green-400" :
+                  "text-zinc-500"
                 }`}>FINAL VERDICT</span>
-              {judges.some(j => j.status === "unsafe") ? (
+              {council.judges.some(j => j.status === "unsafe") ? (
                 <ShieldAlert className="w-4 h-4 text-red-500" />
               ) : (
-                <ShieldCheck className={`w-4 h-4 ${judges.some(j => j.status === "safe") ? "text-green-500" : "text-zinc-600"
+                <ShieldCheck className={`w-4 h-4 ${council.judges.some(j => j.status === "safe") ? "text-green-500" : "text-zinc-600"
                   }`} />
               )}
             </div>
 
-            <div className={`text-xl font-bold tracking-tight ${judges.some(j => j.status === "unsafe") ? "text-red-500" :
-                judges.some(j => j.status === "safe") ? "text-green-500" :
-                  "text-white"
+            <div className={`text-xl font-bold tracking-tight ${council.judges.some(j => j.status === "unsafe") ? "text-red-500" :
+              council.judges.some(j => j.status === "safe") ? "text-green-500" :
+                "text-white"
               }`}>
               {isLoading ? (
                 <span className="animate-pulse text-white">ANALYZING...</span>
-              ) : judges.some(j => j.status === "unsafe") ? (
+              ) : council.judges.some(j => j.status === "unsafe") ? (
                 "ACCESS DENIED"
-              ) : judges.some(j => j.status === "safe") ? (
+              ) : council.judges.some(j => j.status === "safe") ? (
                 "ACCESS GRANTED"
               ) : (
                 "AWAITING INPUT"
@@ -406,13 +280,13 @@ export default function ChatPage() {
       </div>
 
       <AnimatePresence>
-        {showLimitModal && (
+        {rateLimit.showLimitModal && (
           <motion.div
             className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center px-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setShowLimitModal(false)}
+            onClick={() => rateLimit.setShowLimitModal(false)}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
@@ -425,10 +299,10 @@ export default function ChatPage() {
                 <Lock className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-white text-lg font-bold tracking-tight">Cerberus Coffee Break</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed whitespace-pre-line">{limitMessage}</p>
-              <p className="text-xs font-mono text-zinc-500">Only {FREE_CHAT_LIMIT} free prompts are allowed per day.</p>
+              <p className="text-sm text-zinc-400 leading-relaxed whitespace-pre-line">{rateLimit.limitMessage}</p>
+              <p className="text-xs font-mono text-zinc-500">Only {3} free prompts are allowed per day.</p>
               <button
-                onClick={() => setShowLimitModal(false)}
+                onClick={() => rateLimit.setShowLimitModal(false)}
                 className="w-full rounded-xl bg-white text-black py-3 font-semibold hover:bg-zinc-200 transition-colors"
               >
                 I'll be back later
