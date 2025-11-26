@@ -604,6 +604,15 @@ python -m pytest
 - **Unit Tests (`tests/test_judges.py`)**: Mocks the Gemini API to verify that the "Council of Judges" logic (Literal, Intent, Canary) works correctly without spending API credits.
 - **API Tests (`tests/test_api.py`)**: Verifies that the FastAPI endpoints (`/`, `/chat`) are reachable and return correct status codes.
 
+### 🔄 CI/CD Pipeline
+
+The project uses **GitHub Actions** for Continuous Integration.
+
+- **Workflow File**: `.github/workflows/backend-tests.yml`
+- **Trigger**: Runs automatically on every `push` to `main` or `pull_request`.
+- **Action**: Sets up a Python environment, installs dependencies, and runs the full `pytest` suite.
+- **Benefit**: Ensures that no broken code is ever deployed to production.
+
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
