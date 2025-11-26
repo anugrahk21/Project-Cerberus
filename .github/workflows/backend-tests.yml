@@ -1,0 +1,70 @@
+name: Backend Security Tests
+
+# -----------------------------------------------------------------------------
+# 1. TRIGGER EVENTS
+# -----------------------------------------------------------------------------
+# This workflow will run automatically when:
+# - You push code to the 'main' branch
+# - You create a Pull Request targeting the 'main' branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# -----------------------------------------------------------------------------
+# 2. JOBS DEFINITION
+# -----------------------------------------------------------------------------
+jobs:
+  test-cerberus-backend:
+    # The name of the job as it appears in GitHub UI
+    name: Run Pytest Security Suite
+    
+    # The operating system to run the tests on (Ubuntu Linux is standard/fastest)
+    runs-on: ubuntu-latest
+
+    steps:
+    # -------------------------------------------------------------------------
+    # Step A: Check out the code
+    # -------------------------------------------------------------------------
+    # This action downloads your repository code onto the runner machine.
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # -------------------------------------------------------------------------
+    # Step B: Set up Python Environment
+    # -------------------------------------------------------------------------
+    # Installs Python 3.10 to match your local development environment.
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    # -------------------------------------------------------------------------
+    # Step C: Install Dependencies
+    # -------------------------------------------------------------------------
+    # 1. Upgrades pip to the latest version
+    # 2. Installs all libraries listed in backend/requirements.txt
+    #    (FastAPI, Uvicorn, Google-GenerativeAI, Pytest, etc.)
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        cd backend
+        pip install -r requirements.txt
+
+    # -------------------------------------------------------------------------
+    # Step D: Run the Tests
+    # -------------------------------------------------------------------------
+    # Executes the pytest command.
+    # - It will automatically find tests in the 'backend/tests/' folder.
+    # - If ANY test fails, the whole workflow fails (Red X).
+    # - If all pass, the workflow succeeds (Green Check).
+    #
+    # Note: We set the GEMINI_API_KEY to a dummy value because our tests
+    # use 'mocks' and don't actually hit the real Google API.
+    - name: Run Tests with Pytest
+      env:
+        GEMINI_API_KEY: "dummy_key_for_testing_only"
+      run: |
+        cd backend
+        python -m pytest
