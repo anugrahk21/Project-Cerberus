@@ -123,7 +123,7 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
-## � Understanding the Threat: What is Prompt Injection?
+## 📚 Understanding the Threat: What is Prompt Injection?
 
 **Prompt Injection** is a critical security vulnerability where an attacker crafts specific inputs to manipulate a Large Language Model (LLM) into executing unintended or harmful actions. As noted in security research (and highlighted in Oracle's trusted guidance), this is effectively the **"SQL Injection of the AI world."**
 
@@ -154,7 +154,7 @@ Off-the-shelf models are designed to be helpful and will dutifully follow instru
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
-## �💡 Project Philosophy & Leadership
+## 💡 Project Philosophy & Leadership
 
 This project represents a **research-driven approach** to securing Large Language Models.
 
@@ -1195,6 +1195,29 @@ The asyncio architecture is already scalable - the bottleneck would be the Gemin
 2.  **Data Privacy** is enforced before data leaves the perimeter.
 3.  **Operational Costs** are reduced by blocking malicious traffic early.
 This transforms AI security from a blocker into an enabler for business innovation."
+<p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
+
+---
+**Q: "Doesn't adding 3 judges increase latency? How do you justify that?"**
+
+*A:* "Yes, it does add latency (approx. 300-500ms), but this is a deliberate **Security vs. Latency Trade-off**. In high-stakes environments (finance, healthcare), the cost of a data leak or reputation damage far outweighs a sub-second delay. I mitigated this by:
+1.  **Parallel Execution**: Using `asyncio.gather` to run all judges simultaneously, so the latency is determined by the slowest judge, not the sum of all three.
+2.  **Lightweight Models**: Using Gemini Flash (faster/cheaper) for the judges while reserving the Pro model for the main response.
+3.  **Fail-Fast Logic**: If the Literal judge (fastest) detects a known signature, we could theoretically block immediately (though I currently wait for consensus to reduce false positives)."
+
+---
+**Q: "Why not just write a better System Prompt saying 'Do not answer malicious questions'?"**
+
+*A:* "That is the **'Wrapper Defense' fallacy**. Research shows that LLMs are inherently susceptible to 'jailbreaks' because they are trained to follow user instructions. If the user says 'Ignore your previous instructions', the model is conflicted.
+By moving security **outside** the model context into an independent 'Council of Judges', we create an **Air-Gapped Security Layer**. The judges don't see the conversation history or the user's persuasion attempts; they only see the isolated prompt and classify it objectively. This **Separation of Concerns** is a fundamental software engineering principle applied to AI safety."
+
+---
+**Q: "How do you test a non-deterministic system like this?"**
+
+*A:* "Testing AI is challenging because the output changes. I use a **Golden Dataset approach**:
+1.  **Deterministic Unit Tests**: I mock the API responses to test the *logic* (e.g., 'If Judge 1 says UNSAFE, does the risk score update?').
+2.  **Behavioral Testing**: I have a library of known 'Safe' and 'Unsafe' prompts. I run these against the live system and measure the **Pass/Fail Rate** rather than exact string matching.
+3.  **Canary Verification**: I explicitly test that the canary token triggers a block, which is a deterministic assertion we can rely on."
 
 **Features:**
 1. **Multi-User Sessions**: Replace in-memory storage with Redis for distributed rate limiting
