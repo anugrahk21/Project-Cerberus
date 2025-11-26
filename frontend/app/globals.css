@@ -50,7 +50,8 @@ body {
   }
 
   .glass-panel {
-    @apply bg-white/5 backdrop-blur-2xl border-t border-white/10 shadow-[0_8px_32px_0_rgba(0, 0, 0, 0.36)];
+    @apply bg-white/5 backdrop-blur-2xl border-t border-white/10;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
   }
 
   .glass-card {
