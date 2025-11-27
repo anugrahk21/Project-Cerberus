@@ -9,6 +9,10 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 ![Gemini](https://img.shields.io/badge/Gemini-2.5-orange.svg)
 ![Security](https://img.shields.io/badge/Security-Hardened-red.svg)
 
+<br />
+
+[![Live Demo](https://img.shields.io/badge/🚀_LIVE_DEMO-TRY_IT_NOW-2ea44f?style=for-the-badge&logo=vercel&logoColor=white)](https://project-cerberus-pi.vercel.app)
+
 ---
 ## 📖 Project Overview
 
@@ -569,6 +573,15 @@ curl -X POST http://127.0.0.1:8000/session/reset
 7. **Context Replay**: Session history included in every request for multi-turn conversations
 8. **Response Scanning**: AI output checked for canary leakage before returning to user
 9. **Single Point of Failure Mitigation**: By decoupling security into independent judges, the system ensures that a failure in one method (e.g., keyword matching) is caught by another (e.g., semantic analysis), addressing a **critical vulnerability** in simple wrapper defenses.
+
+### 🔄 Extensibility: Evolving the Defense
+This architecture is designed to be **future-proof** and highly extensible. As new attack vectors emerge (e.g., "ASCII Art Injection" or "Foreign Language Bypass"), the system can be hardened without rewriting core logic:
+1.  **Add New Judges**: Simply create a new async function in `judges.py` (e.g., `check_ascii_art`) and add it to the voting council.
+2.  **Refine Judge Prompts**: The "Intent Judge" uses **Few-Shot Learning**. You can make it stricter by adding new examples of "borderline" attacks to its system prompt in `judges.py`.
+    - *Current*: 3 examples of safe/unsafe.
+    - *Future*: 50+ examples covering edge cases like "math-based jailbreaks" or "hypothetical scenarios."
+3.  **Adjust Weights**: If a specific attack type becomes prevalent, you can increase the weight of the judge specialized in detecting it.
+
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
@@ -1187,6 +1200,7 @@ The asyncio architecture is already scalable - the bottleneck would be the Gemin
 2. **Honeypot Responses**: Return fake data to attackers instead of blocking (catch more intel)
 3. **Dynamic Thresholds**: Adjust blocking threshold based on user reputation
 4. **Encrypted Canaries**: Use HMAC signatures instead of plaintext UUIDs
+5. **Expanded Few-Shot Examples**: Continuously update the 'Intent Judge' system prompt with new, real-world jailbreak examples to improve its classification boundary (making the prompt 'more defined').
 
 **Q: "What is the business impact of this security architecture?"**
 
