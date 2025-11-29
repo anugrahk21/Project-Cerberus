@@ -46,34 +46,56 @@ export const useChat = (
 
             setMessages((prev) => [...prev, { role: "ai", content: data.response }]);
         } catch (error: unknown) {
-            console.error("Chat error:", error);
+            console.error("Chat error details:", {
+                error,
+                message: (error as any).message,
+                response: (error as any).response
+            });
 
             const chatError = error as ChatError;
+            const detail = chatError.detail;
 
-            if (chatError.detail?.error === "rate_limit") {
-                const retryAfterSeconds = chatError.detail?.retry_after;
+            // Handle Rate Limit
+            if (detail?.error === "rate_limit") {
+                const retryAfterSeconds = detail.retry_after;
                 const etaMinutes = retryAfterSeconds ? Math.ceil(retryAfterSeconds / 60) : null;
                 const eta = etaMinutes
                     ? `\nTry again in about ${etaMinutes} minute${etaMinutes === 1 ? "" : "s"}.`
                     : "";
-                const modalMessage = `${chatError.detail.message}${eta}`;
+                const modalMessage = `${detail.message}${eta}`;
 
                 rateLimit.maxOutLimit();
                 rateLimit.setLimitMessage(modalMessage);
                 rateLimit.setShowLimitModal(true);
 
-                setMessages((prev) => [...prev, { role: "ai", content: chatError.detail.message, isError: true }]);
+                setMessages((prev) => [...prev, { role: "ai", content: detail.message, isError: true }]);
                 council.setAllStatus("idle");
-            } else if (chatError.detail?.error === "Request blocked by security system" || chatError.detail?.error === "Response blocked by security system") {
-                if (chatError.detail.verdict) {
-                    council.updateCouncil(chatError.detail.verdict);
+            }
+            // Handle Security Blocks
+            else if (detail?.error === "Request blocked by security system" || detail?.error === "Response blocked by security system") {
+                if (detail.verdict) {
+                    council.updateCouncil(detail.verdict);
                 } else {
                     council.setAllStatus("unsafe", "BLOCKED");
                 }
-                setMessages((prev) => [...prev, { role: "ai", content: chatError.detail.message, isError: true }]);
-            } else {
+                setMessages((prev) => [...prev, { role: "ai", content: detail.message, isError: true }]);
+            }
+            // Handle Unexpected Errors
+            else {
                 council.setAllStatus("idle");
-                setMessages((prev) => [...prev, { role: "ai", content: "An unexpected error occurred.", isError: true }]);
+                let errorMessage = "An unexpected error occurred.";
+
+                // Try to extract a meaningful message if possible
+                if (typeof detail === 'string') {
+                    errorMessage = detail;
+                } else if (Array.isArray(detail)) {
+                    // Handle FastAPI validation errors (array of objects)
+                    errorMessage = "Invalid request format.";
+                } else if ((error as Error).message) {
+                    errorMessage = (error as Error).message;
+                }
+
+                setMessages((prev) => [...prev, { role: "ai", content: errorMessage, isError: true }]);
             }
         } finally {
             setIsLoading(false);
