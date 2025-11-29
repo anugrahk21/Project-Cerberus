@@ -18,6 +18,7 @@ import { Send, ShieldCheck, Terminal, AlertTriangle, Lock, ArrowLeft, ShieldAler
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
 import BackToTop from "@/components/ui/BackToTop";
+import AttackSimulation from "@/components/ui/AttackSimulation";
 import { useSystemStatus } from "@/hooks/useSystemStatus";
 import { useCouncil } from "@/hooks/useCouncil";
 import { useRateLimit } from "@/hooks/useRateLimit";
@@ -158,6 +159,13 @@ export default function ChatPage() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            <div className="max-w-4xl mx-auto mb-3 flex justify-end">
+              <AttackSimulation
+                onSelect={(prompt) => setInput(prompt)}
+                disabled={isLoading || !isSystemOnline || rateLimit.hasReachedLimit}
+              />
+            </div>
 
             <div className="max-w-4xl mx-auto relative bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center gap-2 shadow-2xl">
               <div className="pl-4">
