@@ -96,6 +96,15 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 
 ### 🔐 Major Security Enhancements
 
+#### 11. **Red Team Attack Simulation** (NEW in v2.0)
+- 🎮 **Interactive Testing**: Built-in "Simulate Attack" menu for testing security defenses
+- 🧪 **Pre-Configured Scenarios**: One-click execution of common attacks:
+  - Override Instructions ("Ignore previous...")
+  - DAN Mode (Jailbreak attempts)
+  - Social Engineering
+  - Canary Extraction
+- 🛡️ **Educational Tool**: Helps users understand different attack vectors by demonstrating them safely
+
 #### 1. **Weighted Voting System** (NEW in v2.0)
 - 🎯 **Smart Risk Assessment**: Judges now vote with different weights based on their reliability
   - Literal Judge (Weight: 1) - Can be triggered by safe words in wrong contexts
@@ -255,46 +264,62 @@ Project_Cerberus/
 ├── backend/
 │   ├── app/
 │   │   ├── api/
-│   │   │   └── routes.py       # API Endpoints (Chat, Logs, Session)
+│   │   │   └── routes.py                     # API Endpoints (Chat, Logs, Session)
 │   │   ├── core/
-│   │   │   ├── judges.py       # 3-judge weighted voting system (Async)
-│   │   │   └── utils.py        # Security utilities (XML wrapper + Canary)
+│   │   │   ├── judges.py                     # 3-judge weighted voting system (Async)
+│   │   │   └── utils.py                      # Security utilities (XML wrapper + Canary)
 │   │   ├── services/
-│   │   │   ├── llm.py          # Gemini API Service
-│   │   │   ├── logger.py       # Async File Logging
-│   │   │   ├── rate_limiter.py # Rate Limiting Service
-│   │   │   └── session.py      # Session History Management
-│   │   ├── main.py             # App Entry Point & Config
-│   │   ├── schemas.py          # Pydantic Data Models
-│   │   ├── config.py           # Environment Variables
-│   │   └── __init__.py
+│   │   │   ├── llm.py                        # Gemini API Service
+│   │   │   ├── logger.py                     # Async File Logging
+│   │   │   ├── rate_limiter.py               # Rate Limiting Service
+│   │   │   └── session.py                    # Session History Management
+│   │   ├── main.py                         # App Entry Point & Config
+│   │   ├── schemas.py                      # Pydantic Data Models
+│   │   ├── config.py                       # Environment Variables
+│   │   └── __init__.py                     # Python Package Marker
 │   ├── logs/
-│   │   └── attacks.json        # Attack Audit Trail
+│   │   └── attacks.json                    # Attack Audit Trail
 │   ├── tests/
-│   │   ├── test_api.py         # API Endpoint Tests
-│   │   └── test_judges.py      # Security Logic Unit Tests
-│   ├── .env                    # Secrets (gitignored)
-│   ├── requirements.txt        # Python Dependencies
-│   └── runtime.txt             # Deployment Config
+│   │   ├── test_api.py                     # API Endpoint Tests
+│   │   └── test_judges.py                  # Security Logic Unit Tests
+│   ├── .env                              # Secrets (gitignored)
+│   ├── requirements.txt                  # Python Dependencies
+│   └── runtime.txt                       # Deployment Config
 ├── frontend/
 │   ├── app/
 │   │   ├── chat/
-│   │   │   └── page.tsx        # Chat Interface (Refactored)
-│   │   ├── layout.tsx
-│   │   └── page.tsx            # Landing Page
+│   │   │   └── page.tsx                      # Chat Interface (Refactored)
+│   │   ├── layout.tsx                      # Layout Component
+│   │   ├── globals.css                     # Global Styles
+│   │   └── page.tsx                        # Landing Page
 │   ├── components/
-│   │   ├── landing/            # Landing Page Components
-│   │   └── ui/                 # Reusable UI Components
+│   │   ├── landing/                        # Landing Page Components
+│   │   │   ├── BentoGrid.tsx                 # Responsive Grid Layout
+│   │   │   ├── BreathingText.tsx             # Animated Text Effect
+│   │   │   ├── Hero.tsx                      # Hero Section
+│   │   │   ├── HeroBackground.tsx            # Hero Background
+│   │   │   ├── PipelineVis.tsx               # Security Pipeline Visualization
+│   │   │   ├── Terminal.tsx                  # Terminal Animation
+│   │   │   └── TextScramble.tsx              # Text Scramble Effect
+│   │   ├── ui/                             # Reusable UI Components
+│   │   │   ├── AttackSimulation.tsx          # Red Team Simulation Menu
+│   │   │   ├── BackToTop.tsx                 # Scroll to Top Button
+│   │   │   ├── CursorSpotlight.tsx           # Cursor Spotlight Effect
+│   │   │   ├── SmoothScroll.tsx              # Smooth Scroll Animation
+│   │   │   ├── Spotlight.tsx                 # Spotlight Effect
+│   │   │   └── SystemStatusBadge.tsx         # System Status Badge
 │   ├── hooks/
-│   │   ├── useChat.ts          # Chat Logic & State
-│   │   ├── useCouncil.ts       # Council Visualization Logic
-│   │   ├── useRateLimit.ts     # Rate Limit Logic
-│   │   └── useSystemStatus.ts  # Backend Health Check
+│   │   ├── useChat.ts                        # Chat Logic & State
+│   │   ├── useCouncil.ts                     # Council Visualization Logic
+│   │   ├── useRateLimit.ts                   # Rate Limit Logic
+│   │   └── useSystemStatus.ts                # Backend Health Check
 │   ├── lib/
-│   │   ├── api.ts              # API Client
-│   │   └── utils.ts
-│   ├── package.json
-│   └── tsconfig.json
+│   │   ├── api.ts                            # API Client
+│   │   └── utils.ts                          # Utility Functions
+│   ├── public/                           # Static Assets
+│   ├── package.json                      # Package Configuration
+│   ├── postcss.config.mjs                # PostCSS Configuration
+│   └── tsconfig.json                     # TypeScript Configuration
 └── README.md
 ```
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
@@ -454,6 +479,12 @@ curl -X POST http://127.0.0.1:8000/chat ^
 
 **Weighted Voting in Action:**
 This prompt failed both Literal (1x) and Intent (3x) judges, resulting in a risk score of 4, which exceeds the threshold of 2.
+
+### 5. Simulate an Attack (Red Team Mode)
+1. Click the **"⚡ SIMULATE ATTACK"** button above the chat bar.
+2. Select an attack scenario from the dropdown (e.g., "DAN Mode" or "Canary Extraction").
+3. The malicious prompt will be auto-filled into the input field.
+4. Press **Enter** or click **Send** to test Cerberus's defenses against this specific threat.
 
 ### 7. View Attack Logs (Forensic Analysis)
 ```bash
