@@ -1,0 +1,33 @@
+Project Cerberus - Source Available License
+Copyright (c) 2025 Anugrah K.
+
+This software is provided for educational, research, and portfolio purposes. By accessing, using, or contributing to this project, you agree to the following terms:
+
+1. NO DIRECT COPYING OR REDISTRIBUTION
+   Copying, cloning, redistributing, or hosting this software (in part or in whole) as your own standalone product is STRICTLY PROHIBITED. You may not claim this work as your own, nor may you sell, rent, sub-license, or monetize this codebase without explicit written permission from the author.
+
+2. PERMISSION REQUIRED FOR USE
+   If you wish to use substantial portions of this codebase, its specific architecture, or its security implementation for commercial projects, public deployments, or derivative works, YOU MUST OBTAIN WRITTEN PERMISSION from the author. 
+   
+   Please contact the author regarding licensing or usage rights (see Contact section below).
+
+3. ATTRIBUTION REQUIRED
+   If you use concepts, code snippets, architectural patterns, or learning resources from this project in your own work, you MUST clearly cite the original author and project.
+   
+   Citation Format:  
+   "Based on/Inspired by Project Cerberus by Anugrah K. (https://github.com/anugrahk21/Project-Cerberus)"
+
+4. OPEN FOR CONTRIBUTION
+   Contributions are highly encouraged! The "No Direct Copying" rule does not prevent you from forking this repository for the purpose of submitting Pull Requests (PRs) to improve the original project. We welcome bug fixes, security enhancements, and new features.
+
+5. EDUCATIONAL USE
+   You are free to explore, read, and run this code locally to understand the security concepts demonstrated. This license is designed to protect the intellectual property of the author while fostering a learning environment.
+
+6. CONTACT
+   For permissions, business inquiries, or collaboration requests, please reach out via:
+   
+   📧 Email:    anugrah.k910@gmail.com
+   🔗 GitHub:   https://github.com/anugrahk21
+   💼 LinkedIn: https://linkedin.com/in/anugrah-k
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

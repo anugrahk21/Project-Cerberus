@@ -1531,9 +1531,16 @@ If you're new to these concepts, here are some recommended resources:
 ---
 ## �📜 License
 
-This project is open-source under the **MIT License**. Feel free to use it for learning, portfolios, or as a foundation for your own projects.
+This project is released under a **Custom Source-Available License**.
 
-**Note:** This is a student portfolio project demonstrating cybersecurity concepts. For production use, conduct thorough security audits and implement additional hardening measures.
+- ❌ **No Direct Copying**: You may not copy, clone, or redistribute this project as your own work.
+- 🔒 **Permission Required**: Commercial usage or redistribution requires explicit written permission from the author.
+- 🤝 **Open for Contributions**: You are welcome to fork and submit Pull Requests to improve the original project.
+- 🗣️ **Attribution**: If you use concepts from this project, you must cite **Anugrah K.** and link back to this repository.
+
+See the [LICENSE](LICENSE) file for full details and contact information.
+
+**Note:** This is a student portfolio project demonstrating cybersecurity concepts. For production use, conduct thorough security audits.
 <p align="right">(<a href="#table-of-contents">BACK TO MAIN MENU</a>)</p>
 
 ---
