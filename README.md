@@ -2,7 +2,7 @@
 
 **A Production-Grade Multi-Layered Security System for AI API Protection**
 
-Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cybersecurity principles, Reverse Proxy architecture, Fail-Closed Security Design, and Prompt Engineering techniques for AI-powered security.
+Built by **Anugrah K.** as the **Capstone Project** for the **Google AI Agents Intensive** training program. This portfolio project demonstrates advanced AI Cybersecurity principles, Reverse Proxy architecture, Fail-Closed Security Design, and Prompt Engineering techniques for AI-powered security.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)
@@ -12,6 +12,7 @@ Built by **Anugrah K.** as a portfolio project demonstrating advanced AI Cyberse
 <br />
 
 [![Live Demo](https://img.shields.io/badge/🚀_LIVE_DEMO-TRY_IT_NOW-2ea44f?style=for-the-badge&logo=vercel&logoColor=white)](https://project-cerberus-pi.vercel.app)
+[![Kaggle Writeup](https://img.shields.io/badge/🏆_Kaggle-Read_Writeup-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)](https://www.kaggle.com/competitions/agents-intensive-capstone-project/writeups/new-writeup-1764150170773)
 
 ---
 ## 📖 Project Overview
