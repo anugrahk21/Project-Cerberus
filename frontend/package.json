@@ -33,8 +33,11 @@
     "typescript": "^5"
   },
   "browserslist": [
-    "defaults",
-    "not ie 11",
+    "chrome >= 90",
+    "edge >= 90",
+    "firefox >= 88",
+    "safari >= 14",
+    "not dead",
     "not op_mini all"
   ]
 }
