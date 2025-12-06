@@ -13,15 +13,17 @@ Note: Built for AI Cybersecurity Research Portfolio.
 
 import Link from "next/link";
 import { ArrowRight, Terminal } from "lucide-react";
+import dynamic from "next/dynamic";
 import Spotlight from "@/components/ui/Spotlight";
 import TextScramble from "@/components/landing/TextScramble";
-import PipelineVis from "@/components/landing/PipelineVis";
-import BentoGrid from "@/components/landing/BentoGrid";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import BreathingText from "@/components/landing/BreathingText";
 import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
 import HeroBackground from "@/components/landing/HeroBackground";
 import BackToTop from "@/components/ui/BackToTop";
+
+const PipelineVis = dynamic(() => import("@/components/landing/PipelineVis"), { ssr: false });
+const BentoGrid = dynamic(() => import("@/components/landing/BentoGrid"), { ssr: false });
 
 export default function Home() {
   return (
@@ -111,11 +113,11 @@ export default function Home() {
       {/* 4. Footer */}
       <footer className="py-10 border-t border-white/10 bg-black">
         <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex gap-6 text-zinc-500 text-sm font-mono">
+          <div className="flex gap-6 text-zinc-400 text-sm font-mono">
             <a href="https://github.com/anugrahk21/Project-Cerberus" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">GITHUB</a>
             <a href="https://www.linkedin.com/in/anugrah-k/" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">LINKEDIN</a>
           </div>
-          <div className="text-zinc-500 text-sm font-mono">
+          <div className="text-zinc-400 text-sm font-mono">
             © 2025 PROJECT CERBERUS
           </div>
         </div>
