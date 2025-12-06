@@ -14,14 +14,15 @@ Note: Built for AI Cybersecurity Research Portfolio.
 import Link from "next/link";
 import { ArrowRight, Terminal } from "lucide-react";
 import dynamic from "next/dynamic";
-import Spotlight from "@/components/ui/Spotlight";
 import TextScramble from "@/components/landing/TextScramble";
-import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import BreathingText from "@/components/landing/BreathingText";
 import SystemStatusBadge from "@/components/ui/SystemStatusBadge";
-import HeroBackground from "@/components/landing/HeroBackground";
 import BackToTop from "@/components/ui/BackToTop";
 
+// Lazy load heavy visual components to optimize initial performance
+const Spotlight = dynamic(() => import("@/components/ui/Spotlight"), { ssr: false });
+const CursorSpotlight = dynamic(() => import("@/components/ui/CursorSpotlight"), { ssr: false });
+const HeroBackground = dynamic(() => import("@/components/landing/HeroBackground"), { ssr: false });
 const PipelineVis = dynamic(() => import("@/components/landing/PipelineVis"), { ssr: false });
 const BentoGrid = dynamic(() => import("@/components/landing/BentoGrid"), { ssr: false });
 

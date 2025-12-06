@@ -10,7 +10,7 @@ Note: Renders Spline scene as hero section background overlay.
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 const Spline = dynamic(() => import('@splinetool/react-spline'), {
@@ -22,13 +22,29 @@ export default function HeroBackground() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
 
-  // Defer loading of the heavy 3D scene to prioritize initial page interactivity
-  useState(() => {
-    const timer = setTimeout(() => {
-      setShouldLoad(true);
-    }, 2500);
-    return () => clearTimeout(timer);
-  });
+  // Defer loading of the heavy 3D scene to completely avoid blocking initial performance metrics
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const startLoading = () => {
+      // Wait 10 seconds after page is fully loaded before loading the 3D scene
+      timer = setTimeout(() => {
+        setShouldLoad(true);
+      }, 10000);
+    };
+
+    // Wait for the page to be fully loaded (all resources downloaded)
+    if (document.readyState === 'complete') {
+      startLoading();
+    } else {
+      window.addEventListener('load', startLoading);
+    }
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('load', startLoading);
+    };
+  }, []);
 
   return (
     <div className="absolute inset-0 z-0 flex items-center justify-center">
