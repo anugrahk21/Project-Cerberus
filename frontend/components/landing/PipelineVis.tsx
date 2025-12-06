@@ -168,8 +168,9 @@ export default function PipelineVis() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full mt-6">
             {/* Blocked Path */}
             <Step delay={2.5}>
-              <div className="group relative overflow-hidden border border-red-900/30 bg-red-950/10 p-6 rounded-xl h-full hover:border-red-500/50 transition-colors">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="group relative overflow-hidden border border-red-900/30 bg-red-950/10 p-6 rounded-xl h-full transition-all duration-200" style={{ willChange: 'transform', transform: 'translate3d(0, 0, 0)' }}>
+                <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" style={{ willChange: 'opacity', transform: 'translate3d(0, 0, 0)' }} />
+                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none" style={{ boxShadow: 'inset 0 0 0 1px rgba(239, 68, 68, 0.3)', willChange: 'opacity' }} />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4 border-b border-red-900/30 pb-3">
                     <ShieldAlert className="w-6 h-6 text-red-500" />
@@ -200,8 +201,9 @@ export default function PipelineVis() {
 
             {/* Approved Path */}
             <Step delay={2.7}>
-              <div className="group relative overflow-hidden border border-green-900/30 bg-green-950/10 p-6 rounded-xl h-full hover:border-green-500/50 transition-colors">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="group relative overflow-hidden border border-green-900/30 bg-green-950/10 p-6 rounded-xl h-full transition-all duration-200" style={{ willChange: 'transform', transform: 'translate3d(0, 0, 0)' }}>
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" style={{ willChange: 'opacity', transform: 'translate3d(0, 0, 0)' }} />
+                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none" style={{ boxShadow: 'inset 0 0 0 1px rgba(34, 197, 94, 0.3)', willChange: 'opacity' }} />
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4 border-b border-green-900/30 pb-3">
                     <ShieldCheck className="w-6 h-6 text-green-500" />
@@ -287,7 +289,7 @@ function Connector({ delay = 0 }: { delay?: number }) {
 
 function JudgeCard({ title, icon: Icon, desc, details, action }: { title: string, icon: any, desc: string, details: string[], action: string }) {
   return (
-    <div className="border border-white/10 bg-zinc-900/30 p-5 rounded-xl flex flex-col h-full hover:border-white/30 transition-colors">
+    <div className="border border-white/10 bg-zinc-900/30 p-5 rounded-xl flex flex-col h-full transition-all duration-200" style={{ willChange: 'transform', transform: 'translate3d(0, 0, 0)' }}>
       <div className="flex items-center gap-3 mb-3">
         <div className="p-2 bg-white/5 rounded-lg">
           <Icon className="w-5 h-5 text-zinc-300" />
