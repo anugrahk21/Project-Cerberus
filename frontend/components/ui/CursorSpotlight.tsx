@@ -4,15 +4,17 @@ import { useEffect, useRef, useState } from "react";
 
 export default function CursorSpotlight() {
   const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const spotlightRef = useRef<HTMLDivElement>(null);
   const [opacity, setOpacity] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!divRef.current) return;
-      const div = divRef.current;
-      const rect = div.getBoundingClientRect();
-      setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      if (!spotlightRef.current) return;
+
+      const x = e.clientX;
+      const y = e.clientY;
+
+      spotlightRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,0.06), transparent 40%)`;
       setOpacity(1);
     };
 
@@ -36,9 +38,9 @@ export default function CursorSpotlight() {
       style={{ opacity }}
     >
       <div
-        className="absolute -inset-px bg-gradient-to-r from-white/10 to-transparent opacity-0 transition-opacity duration-300"
+        ref={spotlightRef}
+        className="absolute -inset-px bg-gradient-to-r from-white/10 to-transparent transition-opacity duration-300"
         style={{
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.06), transparent 40%)`,
           opacity: 1,
         }}
       />
