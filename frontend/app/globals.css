@@ -41,24 +41,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
-  /* Enable GPU acceleration globally */
-  transform: translate3d(0, 0, 0);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Performance optimization for hover effects */
-*:hover,
-*:focus {
-  will-change: auto;
-}
-
-/* Optimize all transition-based elements */
-* {
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-perspective: 1000;
-  perspective: 1000;
 }
 
 /* Liquid Titanium Utilities */

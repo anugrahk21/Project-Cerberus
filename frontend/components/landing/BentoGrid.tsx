@@ -23,14 +23,9 @@ const BentoCard = ({
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay }}
     className={cn(
-      "group relative overflow-hidden rounded-3xl bg-black/40 border border-white/10 p-6 transition-all duration-200",
+      "group relative overflow-hidden rounded-3xl bg-black/40 border border-white/10 p-6 hover:border-white/30 transition-colors backdrop-blur-sm",
       className
     )}
-    style={{
-      willChange: 'transform',
-      transform: 'translate3d(0, 0, 0)',
-      contain: 'layout style paint'
-    }}
   >
     <div className="absolute inset-0 bg-grid-white/[0.02] pointer-events-none" />
     <div className="relative z-10 h-full flex flex-col">
@@ -40,23 +35,8 @@ const BentoCard = ({
         <p className="text-sm text-zinc-300 font-mono">{description}</p>
       </div>
     </div>
-    {/* Optimized Hover Glow - Use transform for better performance */}
-    <div
-      className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-      style={{
-        willChange: 'opacity',
-        transform: 'translate3d(0, 0, 0)'
-      }}
-    />
-    {/* Border highlight on hover - more performant than changing border color */}
-    <div
-      className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
-      style={{
-        boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
-        willChange: 'opacity',
-        transform: 'translate3d(0, 0, 0)'
-      }}
-    />
+    {/* Hover Glow - Monochrome */}
+    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
   </motion.div>
 );
 
