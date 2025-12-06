@@ -20,15 +20,26 @@ const Spline = dynamic(() => import('@splinetool/react-spline'), {
 
 export default function HeroBackground() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  // Defer loading of the heavy 3D scene to prioritize initial page interactivity
+  useState(() => {
+    const timer = setTimeout(() => {
+      setShouldLoad(true);
+    }, 2500);
+    return () => clearTimeout(timer);
+  });
 
   return (
     <div className="absolute inset-0 z-0 flex items-center justify-center">
       <div className={`w-full h-full flex items-center justify-center transition-opacity duration-1000 ${isLoaded ? 'opacity-40' : 'opacity-0'}`}>
         <div className="w-[400px] h-[800px] md:w-full md:h-full flex items-center justify-center">
-          <Spline
-            scene="https://prod.spline.design/b7rLFPi8bmCZyCzC/scene.splinecode"
-            onLoad={() => setIsLoaded(true)}
-          />
+          {shouldLoad && (
+            <Spline
+              scene="https://prod.spline.design/b7rLFPi8bmCZyCzC/scene.splinecode"
+              onLoad={() => setIsLoaded(true)}
+            />
+          )}
         </div>
       </div>
       {/* Edge gradients to hide Spline badge */}

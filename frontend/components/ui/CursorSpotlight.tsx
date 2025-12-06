@@ -8,14 +8,21 @@ export default function CursorSpotlight() {
   const [opacity, setOpacity] = useState(0);
 
   useEffect(() => {
+    let animationFrameId: number;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!spotlightRef.current) return;
 
-      const x = e.clientX;
-      const y = e.clientY;
-
-      spotlightRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,0.06), transparent 40%)`;
-      setOpacity(1);
+      // Use requestAnimationFrame to throttle heavy style updates
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        if (spotlightRef.current) {
+          const x = e.clientX;
+          const y = e.clientY;
+          spotlightRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,0.06), transparent 40%)`;
+          setOpacity(1);
+        }
+      });
     };
 
     const handleMouseLeave = () => {
@@ -28,6 +35,7 @@ export default function CursorSpotlight() {
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
